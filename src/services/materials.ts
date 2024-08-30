@@ -13,24 +13,28 @@ interface IMaterialResponse{
   data: IMaterial[]
 }
 
+interface IDeleteResponse{
+  message: string
+}
+
 const getAll = async (): Promise<IMaterial[]> =>{
   const response = await axios.get<IMaterialResponse>(baseUrl)
   return response.data.data
 }
 
-const create = async (newObject: IMaterial) =>{
-  const response = await axios.post(baseUrl, newObject)
-  return response.data
+const create = async (newObject: IMaterial): Promise<IMaterial> =>{
+  const response = await axios.post<{data: IMaterial}>(baseUrl, newObject)
+  return response.data.data
 }
 
-const update = async (id: string, newObject: IMaterial) =>{
-  const response = await axios.put(`${baseUrl}/${id}`, newObject)
-  return response.data
+const update = async (id: string, newObject: IMaterial): Promise<IMaterial> =>{
+  const response = await axios.put<{data: IMaterial}>(`${baseUrl}/${id}`, newObject)
+  return response.data.data
 }
 
-const remove = async (id: string) =>{
-  const response = await axios.delete(`${baseUrl}/${id}`)
-  return response.data
+const remove = async (id: string): Promise<IDeleteResponse> =>{
+  const response = await axios.delete<{data: IDeleteResponse}>(`${baseUrl}/${id}`)
+  return response.data.data
 }
 
 export default {getAll, create, update, remove}
