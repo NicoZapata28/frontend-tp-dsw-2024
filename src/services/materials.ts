@@ -15,8 +15,7 @@ interface IMaterialResponse{
 
 const getAll = async (): Promise<IMaterial[]> =>{
   const response = await axios.get<IMaterialResponse>(baseUrl)
-  console.log('materials getall:', response.data)
-  return Array.isArray(response.data.data) ? response.data.data : []
+  return response.data.data
 }
 
 const create = async (newObject: IMaterial) =>{

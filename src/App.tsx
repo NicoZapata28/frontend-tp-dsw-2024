@@ -6,30 +6,19 @@ const App = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([])
   
   useEffect(() => {
-    materialsService.getAll().then(data =>{
-      console.log('data from service:',data)
+    materialsService.getAll().then(data =>
       setMaterials(data)
-    }
-    ).catch(error => {
-      console.error('Error fetching materials: ', error)
-    })
+    )
   }, [])
-
-  useEffect(() => {
-    console.log('state updated:', materials)
-  }, [materials])
 
   return (
     <div>
       <h1>Materials</h1>
-      {Array.isArray(materials) && materials.length > 0 ? (materials.map(m =>
+      {(materials.map(m =>
         <li className="materials" key={m.id}>
-          {m.name}
+          {m.name} | {m.description} | ${m.cost} | Stock: {m.stock}
         </li>
-      )
-      ) : (
-        <p>No materials found.</p>
-      )}
+      ))}
     </div>
   )}
 
