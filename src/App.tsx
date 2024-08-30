@@ -10,7 +10,9 @@ const App = () => {
       console.log('data from service:',data)
       setMaterials(data)
     }
-    )
+    ).catch(error => {
+      console.error('Error fetching materials: ', error)
+    })
   }, [])
 
   useEffect(() => {

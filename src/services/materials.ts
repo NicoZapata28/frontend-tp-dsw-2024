@@ -9,10 +9,14 @@ export interface IMaterial{
   cost: number
 }
 
+interface IMaterialResponse{
+  data: IMaterial[]
+}
+
 const getAll = async (): Promise<IMaterial[]> =>{
-  const response = await axios.get<IMaterial[]>(baseUrl)
+  const response = await axios.get<IMaterialResponse>(baseUrl)
   console.log('materials getall:', response.data)
-  return Array.isArray(response.data) ? response.data : []
+  return Array.isArray(response.data.data) ? response.data.data : []
 }
 
 const create = async (newObject: IMaterial) =>{
