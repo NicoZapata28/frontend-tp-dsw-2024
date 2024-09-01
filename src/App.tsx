@@ -2,9 +2,12 @@ import Materials from "./components/Materials.tsx"
 
 const App = () => {
   return (
-    <div>
+    <>
+      <div>
+        {/* <Nav /> */}
+      </div>
       <Materials />
-    </div>
+    </>
   )}
 
 export default App
