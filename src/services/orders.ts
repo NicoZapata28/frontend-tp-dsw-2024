@@ -2,6 +2,7 @@ import axios from "axios"
 const baseUrl = 'http://localhost:3006/api/orders'
 
 export interface IOrder{
+  orderNumber: number, 
   idEmployee: string,
   idCustomer: string,
   idMaterial: string,
