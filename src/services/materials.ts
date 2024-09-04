@@ -3,8 +3,11 @@ const baseUrl = 'http://localhost:3006/api/materials'
 
 export interface IMaterial{
   id: string,
+  image: string,
   name: string,
   description: string,
+  brand: string,
+  category: string,
   stock: number,
   cost: number
 }

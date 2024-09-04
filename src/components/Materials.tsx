@@ -18,7 +18,10 @@ const Materials = () =>{
       <Table striped hover>
         <thead>
           <tr>
+            <th>Image</th>
+            <th>Category</th>
             <th>Product</th>
+            <th>Brand</th>
             <th>Description</th>
             <th>Stock</th>
             <th>Cost</th>
@@ -28,7 +31,16 @@ const Materials = () =>{
           {(materials.map(m =>
             <tr className="materials" key={m.id}>
               <td>
+              {m.image && <img src={m.image} alt={m.name} style={{ width: '60px', height: 'auto' }} />}
+              </td>
+              <td>
+                {m.category}
+              </td>
+              <td>
                 {m.name}
+              </td>
+              <td>
+                {m.brand}
               </td>
               <td>
                 {m.description}
