@@ -2,13 +2,12 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3006/api/customers'
 
 export interface ICustomer{
-    image: string,
+    id: string,
+    dni: string,
     name: string,
-    description: string,
-    brand: string,
-    category: string,
-    stock: number,
-    cost: number
+    address: string,
+    email: string,
+    phone: string
 }
 
 interface ICustomerResponse{

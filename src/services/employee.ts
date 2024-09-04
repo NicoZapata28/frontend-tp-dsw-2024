@@ -2,12 +2,12 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3006/api/employees'
 
 export interface IEmployee{
-   cuil: String,
-    dni: String,
-    name: String,
-    address: String,
-    email: String,
-    phone: String,
+   cuil: string,
+    dni: string,
+    name: string,
+    address: string,
+    email: string,
+    phone: string,
 }
 
 interface IEmployeeResponse{
@@ -24,18 +24,18 @@ const getAll = async (): Promise<IEmployee[]> =>{
 }
 
 const create = async (newObject: IEmployee): Promise<IEmployee> =>{
-  const response = await axios.post<{data: IEmployee}>(baseUrl, newObject)
-  return response.data.data
+  const response = await axios.post<IEmployee>(baseUrl, newObject)
+  return response.data
 }
 
 const update = async (id: string, newObject: IEmployee): Promise<IEmployee> =>{
-  const response = await axios.put<{data: IEmployee}>(`${baseUrl}/${id}`, newObject)
-  return response.data.data
+  const response = await axios.put<IEmployee>(`${baseUrl}/${id}`, newObject)
+  return response.data
 }
 
 const remove = async (id: string): Promise<IDeleteResponse> =>{
-  const response = await axios.delete<{data: IDeleteResponse}>(`${baseUrl}/${id}`)
-  return response.data.data
+  const response = await axios.delete<IDeleteResponse>(`${baseUrl}/${id}`)
+  return response.data
 }
 
 export default {getAll, create, update, remove}
