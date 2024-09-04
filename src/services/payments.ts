@@ -22,18 +22,18 @@ const getAll = async (): Promise<IPayment[]> =>{
 }
 
 const create = async (newObject: IPayment): Promise<IPayment> =>{
-  const response = await axios.post<{data: IPayment}>(baseUrl, newObject)
-  return response.data.data
+  const response = await axios.post<IPayment>(baseUrl, newObject)
+  return response.data
 }
 
 const update = async (paymentNumber: string, newObject: IPayment): Promise<IPayment> =>{
-  const response = await axios.put<{data: IPayment}>(`${baseUrl}/${paymentNumber}`, newObject)
-  return response.data.data
+  const response = await axios.put<IPayment>(`${baseUrl}/${paymentNumber}`, newObject)
+  return response.data
 }
 
 const remove = async (paymentNumber: string): Promise<IDeleteResponse> =>{
-  const response = await axios.delete<{data: IDeleteResponse}>(`${baseUrl}/${paymentNumber}`)
-  return response.data.data
+  const response = await axios.delete<IDeleteResponse>(`${baseUrl}/${paymentNumber}`)
+  return response.data
 }
 
 export default {getAll, create, update, remove}
