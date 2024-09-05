@@ -4,7 +4,6 @@ import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import faceStore from '../img/face-store.svg'
 
-
 const Navigation = () =>{
   return(
     <Navbar bg="dark" data-bs-theme="dark" expand="xl" className="bg-body-tertiary">

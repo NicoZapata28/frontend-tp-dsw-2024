@@ -5,11 +5,11 @@ import Table from 'react-bootstrap/Table'
 
 function formatDate(date: Date):string {
   if (!(date instanceof Date) || isNaN(date.getTime()))   {
-    return ""; // Maneja el caso en que no sea una fecha válida
+    return "" // Maneja el caso en que no sea una fecha válida
   }
 
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-  return date.toLocaleDateString(undefined, options);
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+  return date.toLocaleDateString(undefined, options)
 }
 
 const Orders = () =>{
