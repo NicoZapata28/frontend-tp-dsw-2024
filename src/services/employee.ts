@@ -8,6 +8,8 @@ export interface IEmployee{
     address: string,
     email: string,
     phone: string,
+    role: string,
+    password : string,
 }
 
 interface IEmployeeResponse{
