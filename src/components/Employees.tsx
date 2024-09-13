@@ -21,7 +21,6 @@ const Employees = () =>{
             <th>cuil</th>
             <th>dni</th>
             <th>name</th>
-            <th>password</th>
             <th>address</th>
             <th>email</th>
             <th>phone</th>
@@ -39,9 +38,6 @@ const Employees = () =>{
               </td>
               <td>
                 {e.name}
-              </td>
-              <td>
-                {e.password}
               </td>
               <td>
                 {e.address}
