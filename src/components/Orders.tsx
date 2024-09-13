@@ -29,32 +29,22 @@ const Orders = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([]);
 
   useEffect(() => {
-    // Obtener órdenes
     ordersService.getAll().then((data) => setOrders(data));
-
-    // Obtener empleados
     employeeService.getAll().then((data) => setEmployees(data));
-
-    // Obtener clientes
     customerService.getAll().then((data) => setCustomers(data));
-
-    // Obtener materiales
     materialService.getAll().then((data) => setMaterials(data));
   }, []);
 
-  // Función para encontrar el nombre del empleado
   const getEmployeeName = (idEmployee: string) => {
     const employee = employees.find((e) => e.cuil === idEmployee);
     return employee ? employee.name : "Desconocido";
   };
 
-  // Función para encontrar el nombre del cliente
   const getCustomerName = (idCustomer: string) => {
     const customer = customers.find((c) => c.id === idCustomer);
     return customer ? customer.name : "Desconocido";
   };
 
-  // Función para encontrar la descripción del material
   const getMaterialDescription = (idMaterial: string) => {
     const material = materials.find((m) => m.id === idMaterial);
     return material ? material.description : "Desconocido";
@@ -68,7 +58,7 @@ const Orders = () => {
           <tr>
             <th>Employee</th>
             <th>Customer</th>
-            <th>Material</th>
+            <th>Material</th> {/* Cambié de IdMaterial a Material */}
             <th>TotalCost</th>
             <th>OrderDate</th>
           </tr>
@@ -76,21 +66,11 @@ const Orders = () => {
         <tbody>
           {orders.map((m) => (
             <tr className="orders" key={m.orderNumber}>
-              <td>
-                {getEmployeeName(m.idEmployee)}
-              </td>
-              <td>
-                {getCustomerName(m.idCustomer)}
-              </td>
-              <td>
-                {getMaterialDescription(m.idMaterial)}
-              </td> 
-              <td>
-                {m.totalCost}
-              </td>
-              <td>
-                {formatDate(new Date(m.orderDate))}
-              </td>
+              <td>{getEmployeeName(m.idEmployee)}</td>
+              <td>{getCustomerName(m.idCustomer)}</td>
+              <td>{getMaterialDescription(m.idMaterial)}</td> {/* Mostrar descripción */}
+              <td>{m.totalCost}</td>
+              <td>{formatDate(new Date(m.orderDate))}</td>
             </tr>
           ))}
         </tbody>
