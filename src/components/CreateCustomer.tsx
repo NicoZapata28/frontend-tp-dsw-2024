@@ -1,57 +1,51 @@
-import { useState } from "react";
-import customerService from "../services/customer";
-import { ICustomer } from "../services/customer";
-import { Form, Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react"
+import customerService from "../services/customer"
+import { ICustomer } from "../services/customer"
+import { Form, Button, Container } from "react-bootstrap"
 
 const CreateCustomer = () => {
   const [customer, setCustomer] = useState<ICustomer>({
-    id: "",
+    id:"",
     dni: "",
     name: "",
     address: "",
     email: "",
     phone: "",
-  });
+  })
 
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); // Para redirigir después de crear el cliente
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCustomer((prevCustomer) => ({
       ...prevCustomer,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await customerService.create(customer);
-      navigate("/customers"); // Redirige a la lista de clientes o donde lo necesites
+      await customerService.create(customer)
+      alert('Customer created!')
+      setCustomer({
+        id:"",
+        dni: "",
+        name: "",
+        address: "",
+        email: "",
+        phone: ""
+      })
     } catch (err) {
-      setError("Error creating customer. Please try again.");
+      setError("Error creating customer. Please try again.")
     }
-  };
+  }
 
   return (
     <Container>
       <h1>Create Customer</h1>
       <Form onSubmit={handleSubmit}>
         {error && <div className="alert alert-danger">{error}</div>}
-        <Form.Group controlId="formBasicId">
-          <Form.Label>ID</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter ID"
-            name="id"
-            value={customer.id}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-
         <Form.Group controlId="formBasicDni">
           <Form.Label>DNI</Form.Label>
           <Form.Control
@@ -117,7 +111,7 @@ const CreateCustomer = () => {
         </Button>
       </Form>
     </Container>
-  );
-};
+  )
+}
 
-export default CreateCustomer;
+export default CreateCustomer

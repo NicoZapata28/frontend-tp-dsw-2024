@@ -7,7 +7,7 @@ const Home = () => {
       <Welcome/>
       <OperationCards/>
     </div>
-  );
-};
+  )
+}
 
 export default Home;
