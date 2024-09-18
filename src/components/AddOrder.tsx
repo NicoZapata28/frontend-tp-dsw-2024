@@ -13,21 +13,31 @@ const initialOrder: IOrder = {
 const AddOrder = () =>{
   const [order, setOrder] = useState<IOrder>(initialOrder)
   const [customers, setCustomers] = useState<ICustomer[]>([])
+  const [filteredCustomers, setFilteredCustomers] = useState<ICustomer[]>([])
+  const [searchQueryCustomers, setSearchQueryCustomers] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         const customerList = await customersService.getAll();
-        setCustomers(customerList);
+        setCustomers(customerList)
+        setFilteredCustomers(customerList)
         setLoading(false)
       } catch (error) {
         console.error('Error fetching customers:', error)
         setLoading(false)
       }
     }
-    fetchCustomers();
+    fetchCustomers()
   }, [])
+
+  useEffect(() => {
+    const results = customers.filter(customer =>
+      customer.dni.toLowerCase().includes(searchQueryCustomers.toLowerCase())
+    )
+    setFilteredCustomers(results)
+  }, [searchQueryCustomers, customers])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -44,6 +54,10 @@ const AddOrder = () =>{
 
   const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOrder({ ...order, idCustomer: e.target.value })
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQueryCustomers(e.target.value);
   }
 
   const addDetail = () => {
@@ -82,12 +96,18 @@ const AddOrder = () =>{
 
       <div>
       <label>Customer</label>
+        <input
+          type="text"
+          placeholder="Search DNI"
+          value={searchQueryCustomers}
+          onChange={handleSearchChange}
+        />
         {loading ? (
           <p>Loading customers...</p>
         ) : (
           <select name="idCustomer" value={order.idCustomer} onChange={handleCustomerChange} required>
             <option value="">Select a customer</option>
-            {customers.map((customer) => (
+            {filteredCustomers.map((customer) => (
               <option key={customer.id} value={customer.id}>
                 {customer.dni}
               </option>
