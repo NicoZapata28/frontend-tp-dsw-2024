@@ -1,13 +1,18 @@
 import axios from "axios"
 const baseUrl = 'http://localhost:3006/api/orders'
 
-export interface IOrder{
-  orderNumber: number, 
+export interface IOrder{ 
   idEmployee: string,
   idCustomer: string,
-  idMaterial: string,
   totalCost: number,
-  orderDate: Date
+  orderDate: string,
+  details: IOrderDetail[]
+}
+
+interface IOrderDetail {
+  idProduct: string
+  quantity: number
+  price: number
 }
 
 interface IOrderResponse{
