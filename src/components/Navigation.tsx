@@ -23,7 +23,7 @@ const Navigation = () =>{
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/Materials">Materials</Nav.Link>
-            <Nav.Link href="#customerLink" >Customers</Nav.Link> {/*Indicar link de Customer.tsx */}
+            <Nav.Link href="/Customers" >Customers</Nav.Link> {/*Indicar link de Customer.tsx */}
             <Nav.Link href="/Orders" >Orders</Nav.Link> {/*Indicar link de Orders.tsx */}
             <Nav.Link href="/CreateCustomer">Create customer</Nav.Link>
             <NavDropdown title="Profile" id="basic-nav-dropdown">
