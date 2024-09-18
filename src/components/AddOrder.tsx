@@ -1,5 +1,6 @@
-import { useState } from "react"
-import ordersService, {IOrder} from '../services/orders.ts'
+import { useState, useEffect } from "react"
+import ordersService, {IOrder} from '../services/orders'
+import customersService, {ICustomer} from '../services/customer.ts'
 
 const initialOrder: IOrder = {
   idEmployee: '',
@@ -11,6 +12,22 @@ const initialOrder: IOrder = {
 
 const AddOrder = () =>{
   const [order, setOrder] = useState<IOrder>(initialOrder)
+  const [customers, setCustomers] = useState<ICustomer[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const customerList = await customersService.getAll();
+        setCustomers(customerList);
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching customers:', error)
+        setLoading(false)
+      }
+    }
+    fetchCustomers();
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -23,6 +40,10 @@ const AddOrder = () =>{
       i === index ? { ...detail, [name]: value } : detail
     )
     setOrder({ ...order, details: updatedDetails })
+  }
+
+  const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setOrder({ ...order, idCustomer: e.target.value })
   }
 
   const addDetail = () => {
@@ -60,8 +81,19 @@ const AddOrder = () =>{
       </div>
 
       <div>
-        <label>Customer ID</label>
-        <input type="text" name="idCustomer" value={order.idCustomer} onChange={handleInputChange} required />
+      <label>Customer</label>
+        {loading ? (
+          <p>Loading customers...</p>
+        ) : (
+          <select name="idCustomer" value={order.idCustomer} onChange={handleCustomerChange} required>
+            <option value="">Select a customer</option>
+            {customers.map((customer) => (
+              <option key={customer.id} value={customer.id}>
+                {customer.dni}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div>
