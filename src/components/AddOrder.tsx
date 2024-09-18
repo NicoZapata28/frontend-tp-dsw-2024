@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import ordersService, {IOrder} from '../services/orders'
 import customersService, {ICustomer} from '../services/customer.ts'
+import materialsService, {IMaterial} from '../services/materials.ts'
 
 const initialOrder: IOrder = {
   idEmployee: '',
@@ -15,22 +16,31 @@ const AddOrder = () =>{
   const [customers, setCustomers] = useState<ICustomer[]>([])
   const [filteredCustomers, setFilteredCustomers] = useState<ICustomer[]>([])
   const [searchQueryCustomers, setSearchQueryCustomers] = useState<string>('')
+  const [materials, setMaterials] = useState<IMaterial[]>([])
+  const [filteredMaterials, setFilteredMaterials] = useState<IMaterial[]>([])
+  const [searchMaterialQuery, setSearchMaterialQuery] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const customerList = await customersService.getAll();
-        setCustomers(customerList)
-        setFilteredCustomers(customerList)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching customers:', error)
-        setLoading(false)
-      }
-    }
-    fetchCustomers()
-  }, [])
+      const fetchCustomersAndMaterials = async () => {
+        try {
+          const customerList = await customersService.getAll()
+          setCustomers(customerList)
+          setFilteredCustomers(customerList)
+  
+          const materialList = await materialsService.getAll()
+          setMaterials(materialList)
+          setFilteredMaterials(materialList)
+  
+          setLoading(false)
+        } catch (error) {
+          console.error('Error fetching data:', error)
+          setLoading(false)
+        }
+      };
+  
+      fetchCustomersAndMaterials()
+    }, [])
 
   useEffect(() => {
     const results = customers.filter(customer =>
@@ -38,6 +48,13 @@ const AddOrder = () =>{
     )
     setFilteredCustomers(results)
   }, [searchQueryCustomers, customers])
+
+  useEffect(() => {
+    const results = materials.filter(material =>
+      material.name.toLowerCase().includes(searchMaterialQuery.toLowerCase())
+    )
+    setFilteredMaterials(results)
+  }, [searchMaterialQuery, materials])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -56,8 +73,22 @@ const AddOrder = () =>{
     setOrder({ ...order, idCustomer: e.target.value })
   }
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQueryCustomers(e.target.value);
+  const handleMaterialChange = (index: number, e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedMaterial = materials.find(material => material.id === e.target.value)
+    if (selectedMaterial) {
+      const updatedDetails = order.details.map((detail, i) =>
+        i === index ? { ...detail, idProduct: selectedMaterial.id, price: selectedMaterial.cost } : detail
+      )
+      setOrder({ ...order, details: updatedDetails })
+    }
+  }
+
+  const handleSearchCustomerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQueryCustomers(e.target.value)
+  }
+
+  const handleSearchMaterialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchMaterialQuery(e.target.value)
   }
 
   const addDetail = () => {
@@ -95,12 +126,12 @@ const AddOrder = () =>{
       </div>
 
       <div>
-      <label>Customer</label>
+        <label>Customer</label>
         <input
           type="text"
           placeholder="Search DNI"
           value={searchQueryCustomers}
-          onChange={handleSearchChange}
+          onChange={handleSearchCustomerChange}
         />
         {loading ? (
           <p>Loading customers...</p>
@@ -123,14 +154,25 @@ const AddOrder = () =>{
 
       {order.details.map((detail, index) => (
         <div key={index}>
-          <label>Product ID</label>
+          <label>Product</label>
           <input
             type="text"
-            name="idProduct"
-            value={detail.idProduct}
-            onChange={(e) => handleDetailChange(index, e)}
-            required
+            placeholder="Search product"
+            value={searchMaterialQuery}
+            onChange={handleSearchMaterialChange}
           />
+          {loading ? (
+            <p>Loading products...</p>
+          ) : (
+            <select value={detail.idProduct} onChange={(e) => handleMaterialChange(index, e)} required>
+              <option value="">Select a product</option>
+              {filteredMaterials.map((material) => (
+                <option key={material.id} value={material.id}>
+                  {material.name} - {material.brand} - ${material.cost}
+                </option>
+              ))}
+            </select>
+          )}
           <label>Quantity</label>
           <input
             type="number"
