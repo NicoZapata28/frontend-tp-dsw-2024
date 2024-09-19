@@ -1,5 +1,6 @@
 import { useState } from "react"
 import loginService from '../services/login.ts'
+import { Form, Button, Container, Alert } from 'react-bootstrap'
 
 interface LoginFormProps {
   onLoginSuccess: () => void
@@ -26,33 +27,36 @@ const LoginForm: React.FC<LoginFormProps> = ({onLoginSuccess}) => {
   }
 
   return (
-    <div>
-      <h2>Login</h2>
-      {errorMessage && <div className="error">{errorMessage}</div>}
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="cuil">CUIL:</label>
-          <input
+    <Container
+      className="d-flex justify-content-center align-items-center vh-100"
+      style={{ backgroundImage: 'url("/path/to/your/image.jpg")', backgroundSize: 'cover' }}
+    >
+      <Form className="p-4 shadow rounded" style={{ maxWidth: '400px' }} onSubmit={handleLogin}>
+        <h2 className="text-center">Login</h2>
+        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+        <Form.Group controlId="cuil">
+          <Form.Label>CUIL:</Form.Label>
+          <Form.Control
             type="text"
-            id="cuil"
             value={cuil}
             onChange={({ target }) => setCuil(target.value)}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
             type="password"
-            id="password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
             required
           />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+        </Form.Group>
+        <Button variant="primary" type="submit" className="w-100">
+          Login
+        </Button>
+      </Form>
+    </Container>
   )
 }
 
