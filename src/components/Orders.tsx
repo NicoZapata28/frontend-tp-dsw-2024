@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import React from "react"
 import ordersService from "../services/orders.ts"
 import employeeService from "../services/employee.ts"
 import customerService from "../services/customer.ts"
@@ -9,12 +10,6 @@ import { IEmployee } from "../services/employee.ts"
 import { IMaterial } from "../services/materials.ts"
 import Table from "react-bootstrap/Table"
 import Button from "react-bootstrap/Button"
-import Modal from "react-bootstrap/Modal"
-import Form from "react-bootstrap/Form"
-
-interface IOrderWithDetails extends IOrder {
-  details?: string;  // Nueva propiedad para almacenar los detalles
-}
 
 function formatDate(date: Date): string {
   if (!(date instanceof Date) || isNaN(date.getTime())) {
@@ -30,13 +25,11 @@ function formatDate(date: Date): string {
 }
 
 const Orders = () => {
-  const [orders, setOrders] = useState<IOrderWithDetails[]>([]);
+  const [orders, setOrders] = useState<IOrder[]>([]);
   const [employees, setEmployees] = useState<IEmployee[]>([]);
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [materials, setMaterials] = useState<IMaterial[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<IOrderWithDetails | null>(null);
-  const [orderDetails, setOrderDetails] = useState<string>("");
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null); // Estado para controlar la orden expandida
 
   useEffect(() => {
     ordersService.getAll().then((data) => setOrders(data));
@@ -60,28 +53,9 @@ const Orders = () => {
     return material ? material.description : "Desconocido";
   };
 
-  const handleShowModal = (order: IOrderWithDetails) => {
-    setSelectedOrder(order);
-    setOrderDetails(order.details || "");  // Cargar detalles previos si existen
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setOrderDetails("");
-  };
-
-  const handleSaveDetails = () => {
-    if (selectedOrder) {
-      // Actualizar los detalles de la orden seleccionada
-      const updatedOrders = orders.map((order) =>
-        order.orderNumber === selectedOrder.orderNumber
-          ? { ...order, details: orderDetails } // Actualizamos con los nuevos detalles
-          : order
-      );
-      setOrders(updatedOrders);
-      setShowModal(false);
-    }
+  const toggleDetails = (orderId: string) => {
+    // Alternar entre mostrar y ocultar detalles
+    setExpandedOrder((prevOrderId) => (prevOrderId === orderId ? null : orderId));
   };
 
   return (
@@ -92,62 +66,49 @@ const Orders = () => {
           <tr>
             <th>Employee</th>
             <th>Customer</th>
-            <th>Material</th>
             <th>TotalCost</th>
             <th>OrderDate</th>
-            <th>Details</th> {/* Nueva columna para los detalles */}
-            <th></th>
+            <th></th> {/* Columna para el botón de mostrar/ocultar detalles */}
           </tr>
         </thead>
         <tbody>
-          {orders.map((m) => (
-            <tr className="orders" key={m.orderNumber}>
-              <td>{getEmployeeName(m.idEmployee)}</td>
-              <td>{getCustomerName(m.idCustomer)}</td>
-              <td>{getMaterialDescription(m.idMaterial)}</td>
-              <td>{m.totalCost}</td>
-              <td>{formatDate(new Date(m.orderDate))}</td>
-              <td>{m.details || "No details"}</td> {/* Mostrar detalles o mensaje por defecto */}
-              <td>
-                <Button variant="info" onClick={() => handleShowModal(m)}>
-                  Add/Edit Details
-                </Button>
-              </td>
-            </tr>
+          {orders.map((order) => (
+            <React.Fragment key={order.id}>
+              <tr className="orders">
+                <td>{getEmployeeName(order.idEmployee)}</td>
+                <td>{getCustomerName(order.idCustomer)}</td>
+                <td>{order.totalCost}</td>
+                <td>{formatDate(new Date(order.orderDate))}</td>
+                <td>
+                  <Button
+                    variant="primary"
+                    onClick={() => toggleDetails(order.id)}
+                  >
+                    {expandedOrder === order.id ? "Ocultar detalles" : "Mostrar detalles"}
+                  </Button>
+                </td>
+              </tr>
+
+              {/* Mostrar los detalles solo si esta orden está expandida */}
+              {expandedOrder === order.id && (
+                <tr>
+                  <td colSpan={5}>
+                    <div className="order-details">
+                      <strong>Detalles de la orden:</strong>
+                      {order.details.map((detail, index) => (
+                        <div key={index}>
+                          {getMaterialDescription(detail.idProduct)} -{" "}
+                          {detail.quantity} x ${detail.price}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
           ))}
         </tbody>
       </Table>
-
-      {/* Modal para agregar detalles */}
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Add/Edit Details for Order {selectedOrder?.orderNumber}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formOrderDetails">
-              <Form.Label>Order Details</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={orderDetails}
-                onChange={(e) => setOrderDetails(e.target.value)}
-                placeholder="Enter additional details about the order"
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSaveDetails}>
-            Save Details
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };

@@ -6,7 +6,8 @@ export interface IOrder{
   idCustomer: string,
   totalCost: number,
   orderDate: string,
-  details: IOrderDetail[]
+  details: IOrderDetail[],
+  id: string
 }
 
 interface IOrderDetail {
