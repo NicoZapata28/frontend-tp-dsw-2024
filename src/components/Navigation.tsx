@@ -4,7 +4,11 @@ import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import faceStore from '../img/face-store.svg'
 
-const Navigation = () =>{
+interface NavigationProps{
+  onLogout: () => void
+}
+
+const Navigation:React.FC<NavigationProps> = ({onLogout}) =>{
   return(
     <Navbar bg="dark" data-bs-theme="dark" expand="xl" className="bg-body-tertiary">
       <Container>
@@ -32,7 +36,7 @@ const Navigation = () =>{
               </NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">Another action</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
+              <NavDropdown.Item onClick={onLogout}>
                 Close session
               </NavDropdown.Item>
             </NavDropdown>
