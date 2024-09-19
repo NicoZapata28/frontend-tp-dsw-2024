@@ -37,7 +37,7 @@ const AddOrder = () =>{
           console.error('Error fetching data:', error)
           setLoading(false)
         }
-      };
+      }
   
       fetchCustomersAndMaterials()
     }, [])
@@ -56,17 +56,14 @@ const AddOrder = () =>{
     setFilteredMaterials(results)
   }, [searchMaterialQuery, materials])
 
+  useEffect(() => {
+    const total = order.details.reduce((acc, detail) => acc + detail.price, 0);
+    setOrder(o => ({ ...o, totalCost: total }));
+  }, [order.details])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setOrder({ ...order, [name]: value })
-  }
-
-  const handleDetailChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    const updatedDetails = order.details.map((detail, i) => 
-      i === index ? { ...detail, [name]: value } : detail
-    )
-    setOrder({ ...order, details: updatedDetails })
   }
 
   const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -77,10 +74,20 @@ const AddOrder = () =>{
     const selectedMaterial = materials.find(material => material.id === e.target.value)
     if (selectedMaterial) {
       const updatedDetails = order.details.map((detail, i) =>
-        i === index ? { ...detail, idProduct: selectedMaterial.id, price: selectedMaterial.cost } : detail
+        i === index ? { ...detail, idProduct: selectedMaterial.id, quantity:1, price: selectedMaterial.cost } : detail
       )
       setOrder({ ...order, details: updatedDetails })
     }
+  }
+
+  const handleQuantityChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const quantity = parseInt(e.target.value, 10);
+    const updatedDetails = order.details.map((detail, i) => {
+      const selectedMaterial = materials.find(material => material.id === detail.idProduct);
+      const price = selectedMaterial ? selectedMaterial.cost * quantity : detail.price;
+      return i === index ? { ...detail, quantity, price } : detail;
+    });
+    setOrder({ ...order, details: updatedDetails });
   }
 
   const handleSearchCustomerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,8 +155,7 @@ const AddOrder = () =>{
       </div>
 
       <div>
-        <label>Total Cost</label>
-        <input type="number" name="totalCost" value={order.totalCost} onChange={handleInputChange} required />
+        <label>Total Cost: ${order.totalCost}</label>
       </div>
 
       {order.details.map((detail, index) => (
@@ -178,17 +184,10 @@ const AddOrder = () =>{
             type="number"
             name="quantity"
             value={detail.quantity}
-            onChange={(e) => handleDetailChange(index, e)}
+            onChange={(e) => handleQuantityChange(index, e)}
             required
           />
-          <label>Price</label>
-          <input
-            type="number"
-            name="price"
-            value={detail.price}
-            onChange={(e) => handleDetailChange(index, e)}
-            required
-          />
+          <label>Price: ${detail.price}</label>
           <button type="button" onClick={() => removeDetail(index)}>Remove</button>
         </div>
       ))}

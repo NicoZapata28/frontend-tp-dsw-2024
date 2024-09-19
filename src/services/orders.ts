@@ -9,7 +9,7 @@ export interface IOrder{
   details: IOrderDetail[]
 }
 
-interface IOrderDetail {
+export interface IOrderDetail {
   idProduct: string
   quantity: number
   price: number
