@@ -20,43 +20,43 @@ function formatDate(date: Date): string {
     year: "numeric",
     month: "long",
     day: "numeric",
-  };
-  return date.toLocaleDateString(undefined, options);
+  }
+  return date.toLocaleDateString(undefined, options)
 }
 
 const Orders = () => {
-  const [orders, setOrders] = useState<IOrder[]>([]);
-  const [employees, setEmployees] = useState<IEmployee[]>([]);
-  const [customers, setCustomers] = useState<ICustomer[]>([]);
-  const [materials, setMaterials] = useState<IMaterial[]>([]);
-  const [expandedOrder, setExpandedOrder] = useState<string | null>(null); // Estado para controlar la orden expandida
+  const [orders, setOrders] = useState<IOrder[]>([])
+  const [employees, setEmployees] = useState<IEmployee[]>([])
+  const [customers, setCustomers] = useState<ICustomer[]>([])
+  const [materials, setMaterials] = useState<IMaterial[]>([])
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null) // Estado para controlar la orden expandida
 
   useEffect(() => {
-    ordersService.getAll().then((data) => setOrders(data));
-    employeeService.getAll().then((data) => setEmployees(data));
-    customerService.getAll().then((data) => setCustomers(data));
-    materialService.getAll().then((data) => setMaterials(data));
-  }, []);
+    ordersService.getAll().then((data) => setOrders(data))
+    employeeService.getAll().then((data) => setEmployees(data))
+    customerService.getAll().then((data) => setCustomers(data))
+    materialService.getAll().then((data) => setMaterials(data))
+  }, [])
 
   const getEmployeeName = (idEmployee: string) => {
-    const employee = employees.find((e) => e.cuil === idEmployee);
-    return employee ? employee.name : "Desconocido";
-  };
+    const employee = employees.find((e) => e.id === idEmployee)
+    return employee ? employee.name : "Desconocido"
+  }
 
   const getCustomerName = (idCustomer: string) => {
-    const customer = customers.find((c) => c.id === idCustomer);
-    return customer ? customer.name : "Desconocido";
-  };
+    const customer = customers.find((c) => c.id === idCustomer)
+    return customer ? customer.name : "Desconocido"
+  }
 
   const getMaterialDescription = (idMaterial: string) => {
-    const material = materials.find((m) => m.id === idMaterial);
-    return material ? material.description : "Desconocido";
-  };
+    const material = materials.find((m) => m.id === idMaterial)
+    return material ? material.description : "Desconocido"
+  }
 
   const toggleDetails = (orderId: string) => {
     // Alternar entre mostrar y ocultar detalles
     setExpandedOrder((prevOrderId) => (prevOrderId === orderId ? null : orderId));
-  };
+  }
 
   return (
     <div className="container">
@@ -110,7 +110,7 @@ const Orders = () => {
         </tbody>
       </Table>
     </div>
-  );
-};
+  )
+}
 
-export default Orders;
+export default Orders

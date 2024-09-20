@@ -2,6 +2,7 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3006/api/employees'
 
 export interface IEmployee{
+    id: string,
     cuil: string,
     dni: string,
     name: string,
