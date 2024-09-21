@@ -58,6 +58,17 @@ const Orders = () => {
     setExpandedOrder((prevOrderId) => (prevOrderId === orderId ? null : orderId));
   }
 
+  const handleDelete = (orderId: string) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta orden?")) {
+      ordersService.remove(orderId).then(() => {
+        // Actualiza el estado eliminando la orden
+        setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId))
+      }).catch((error) => {
+        console.error("Error al eliminar la orden:", error)
+      })
+    }
+  }
+
   return (
     <div className="container">
       <h1>Orders</h1>
@@ -85,6 +96,14 @@ const Orders = () => {
                     onClick={() => toggleDetails(order.id)}
                   >
                     {expandedOrder === order.id ? "Ocultar detalles" : "Mostrar detalles"}
+                  </Button>
+                </td>
+                <td>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(order.id)}
+                  >
+                    Eliminar
                   </Button>
                 </td>
               </tr>
