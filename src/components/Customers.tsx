@@ -1,24 +1,39 @@
-import { useState, useEffect } from "react";
-import React from "react";
-import customersService from "../services/customer.ts";
-import ordersService from "../services/orders.ts"; 
-import materialsService from "../services/materials.ts"; 
-import { ICustomer } from "../services/customer.ts";
-import { IOrder } from "../services/orders.ts"; 
-import { IMaterial } from "../services/materials.ts"; 
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
+import { useState, useEffect } from "react"
+import React from "react"
+import customersService from "../services/customer.ts"
+import ordersService from "../services/orders.ts"
+import materialsService from "../services/materials.ts"
+import { ICustomer } from "../services/customer.ts"
+import { IOrder } from "../services/orders.ts"
+import { IMaterial } from "../services/materials.ts"
+import Table from 'react-bootstrap/Table'
+import Button from 'react-bootstrap/Button'
 
 const Customers = () => {
     const [customers, setCustomers] = useState<ICustomer[]>([]);
     const [orders, setOrders] = useState<IOrder[]>([]); 
     const [materials, setMaterials] = useState<IMaterial[]>([]); 
     const [expandedCustomers, setExpandedCustomers] = useState<Set<string>>(new Set()); // Estado para múltiples clientes expandidos
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        customersService.getAll().then(data => setCustomers(data));
-        ordersService.getAll().then(data => setOrders(data));
-        materialsService.getAll().then(data => setMaterials(data)); 
+        const fetchData = async () => {
+            try {
+                const customersData = await customersService.getAll();
+                const ordersData = await ordersService.getAll();
+                const materialsData = await materialsService.getAll();
+                setCustomers(customersData);
+                setOrders(ordersData);
+                setMaterials(materialsData);
+            } catch (error) {
+                setError("Error fetching data");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const toggleOrders = (customerId: string) => {
@@ -35,8 +50,11 @@ const Customers = () => {
 
     const getMaterialName = (idProduct: string) => {
         const material = materials.find(m => m.id === idProduct);
-        return material ? material.description : "Desconocido";
+        return material ? material.name : "Desconocido";
     };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <div className="container">
@@ -66,7 +84,7 @@ const Customers = () => {
                                         style={{
                                             backgroundColor: expandedCustomers.has(c.id) ? 'white' : 'gray',
                                             color: expandedCustomers.has(c.id) ? 'black' : 'white',
-                                            border: 'none'
+                                            border: '1px solid '
                                         }}
                                         onClick={() => toggleOrders(c.id)}
                                     >
