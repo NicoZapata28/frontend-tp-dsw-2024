@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react"
-import materialsService from "../services/materials.ts"
-import { IMaterial } from "../services/materials.ts"
-import Table from "react-bootstrap/Table"
-import Button from "react-bootstrap/Button"
-import Spinner from "react-bootstrap/Spinner" // Para mostrar mientras carga
+import { useState, useEffect } from "react";
+import materialsService from "../services/materials.ts";
+import { IMaterial } from "../services/materials.ts";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
 
 const Materials = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([]);
-  const [loading, setLoading] = useState(true); // Estado de carga
   const [showNoStock, setShowNoStock] = useState(false); // Estado para mostrar solo materiales sin stock
   const [visibleDescriptions, setVisibleDescriptions] = useState<string[]>([]); // Estado para manejar las descripciones visibles
 
   useEffect(() => {
-    materialsService.getAll().then((data) => {
-      setMaterials(data);
-      setLoading(false); // Termina la carga
-    });
+    materialsService.getAll()
+      .then((data) => {
+        setMaterials(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching materials:", error);
+      });
   }, []);
 
   // Alternar entre mostrar materiales con stock y sin stock
@@ -27,8 +28,8 @@ const Materials = () => {
   const toggleDescription = (id: string) => {
     setVisibleDescriptions((prevVisible) =>
       prevVisible.includes(id)
-        ? prevVisible.filter((itemId) => itemId !== id) // Ocultar si ya está visible
-        : [...prevVisible, id] // Mostrar si no está visible
+        ? prevVisible.filter((visibleId) => visibleId !== id) // Eliminamos el ID si ya está visible
+        : [...prevVisible, id] // Agregamos el ID si no está visible
     );
   };
 
@@ -36,16 +37,6 @@ const Materials = () => {
   const filteredMaterials = showNoStock
     ? materials.filter((m) => m.stock === 0)
     : materials.filter((m) => m.stock > 0);
-
-  if (loading) {
-    return (
-      <div className="container text-center">
-        <Spinner animation="border" role="status">
-          <span className="sr-only">Cargando...</span>
-        </Spinner>
-      </div>
-    );
-  }
 
   return (
     <div className="container">
@@ -101,9 +92,7 @@ const Materials = () => {
                       border: "1px solid black",
                     }}
                   >
-                    {visibleDescriptions.includes(m.id)
-                      ? "Ocultar descripción"
-                      : "Mostrar descripción"}
+                    {visibleDescriptions.includes(m.id) ? "Ocultar descripción" : "Mostrar descripción"}
                   </Button>
                   {/* Mostrar la descripción solo si está visible */}
                   {visibleDescriptions.includes(m.id) && (
