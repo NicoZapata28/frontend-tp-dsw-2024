@@ -3,6 +3,7 @@ import materialsService from "../services/materials.ts"
 import { IMaterial } from "../services/materials.ts"
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
+import {Link}  from 'react-router-dom'
 
 const Materials = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([])
@@ -29,7 +30,9 @@ const Materials = () => {
       <Button variant="primary" onClick={toggleShowNoStock}>
         {showNoStock ? "Mostrar materiales con stock" : "Mostrar materiales sin stock"}
       </Button>
-      
+      <Link to="/addmaterials">
+        <Button variant="primary" className="mb-3">Agregar Nuevo Material</Button>
+      </Link>
       <Table striped hover className="mt-3">
         <thead>
           <tr>
@@ -61,5 +64,6 @@ const Materials = () => {
     </div>
   )
 }
+
 
 export default Materials

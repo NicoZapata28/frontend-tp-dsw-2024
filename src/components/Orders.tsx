@@ -10,6 +10,9 @@ import { IEmployee } from "../services/employee.ts"
 import { IMaterial } from "../services/materials.ts"
 import Table from "react-bootstrap/Table"
 import Button from "react-bootstrap/Button"
+import {Link}  from 'react-router-dom'
+
+
 
 function formatDate(date: Date): string {
   if (!(date instanceof Date) || isNaN(date.getTime())) {
@@ -30,6 +33,7 @@ const Orders = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([])
   const [materials, setMaterials] = useState<IMaterial[]>([])
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null) // Estado para controlar la orden expandida
+ 
 
   useEffect(() => {
     ordersService.getAll().then((data) => setOrders(data))
@@ -72,6 +76,9 @@ const Orders = () => {
   return (
     <div className="container">
       <h1>Orders</h1>
+      <Link to="/addOrder">
+        <Button variant="primary" className="mb-3">Agregar Nueva orden </Button>
+      </Link>
       <Table striped hover>
         <thead>
           <tr>

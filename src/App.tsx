@@ -7,7 +7,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Footer from "./components/Footer.tsx"
 import Customers from "./components/Customers.tsx"
 import LoginForm from "./components/LoginForm.tsx"
-
+import AddMaterial from "./components/AddMaterial.tsx" 
+import AddOrder from "./components/AddOrder.tsx"
+import CreateCustomer from "./components/CreateCustomer.tsx"
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 
@@ -37,6 +39,9 @@ const App = () => {
           <Route path="/materials" element={<Materials />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/customers" element={<Customers/>}/>
+          <Route path="/addmaterials" element={<AddMaterial />} /> 
+          <Route path="/addOrder" element={<AddOrder />} />
+          <Route path="/CreateCustomer" element={<CreateCustomer />} />
         </Routes>
         <Footer />
       </Router>

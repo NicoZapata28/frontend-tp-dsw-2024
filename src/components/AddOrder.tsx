@@ -121,6 +121,8 @@ const AddOrder = () =>{
   return (
     <form onSubmit={handleSubmit}>
       <div>
+      
+      <h1>Add New Order</h1>
         <label>Employee ID</label>
         <input type="text" name="idEmployee" value={order.idEmployee} onChange={handleInputChange} required />
       </div>
@@ -196,6 +198,7 @@ const AddOrder = () =>{
       <button type="button" onClick={addDetail}>Add Product</button>
       <button type="submit">Create Order</button>
     </form>
+    
   )
 }
 

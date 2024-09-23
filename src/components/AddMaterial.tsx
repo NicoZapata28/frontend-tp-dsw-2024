@@ -49,6 +49,8 @@ const AddMaterial = () => {
   }
 
   return (
+    <div>
+      <h1>Agregar Nuevo Material</h1>
     <form onSubmit={handleSubmit}>
       <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Product Name" />
       <input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
@@ -59,7 +61,12 @@ const AddMaterial = () => {
       <input type="file" name="image" onChange={handleChange} />
       <button type="submit">Add Product</button>
     </form>
-  )
+    </div>
+  );
+  
+  
 }
+
+
 
 export default AddMaterial

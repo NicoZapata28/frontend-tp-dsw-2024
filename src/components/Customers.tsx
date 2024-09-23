@@ -2,19 +2,27 @@ import { useState, useEffect } from "react"
 import customersService from "../services/customer.ts"
 import { ICustomer } from "../services/customer.ts"
 import Table from 'react-bootstrap/Table'
+import {Link}  from 'react-router-dom'
+import { Button } from 'react-bootstrap';
 
 const Customers = () =>{
     const [customers, setCustomers] = useState<ICustomer[]>([])
+    
 
     useEffect(() => {
         customersService.getAll().then(data =>
           setCustomers(data)
         )
       }, [])
-
+       
       return (
         <div className="container">
           <h1>Customers</h1>
+            {/* Botón para crear un nuevo cliente */}
+            <Link to="/CreateCustomer">
+        <Button variant="primary" className="mb-3">Agregar Nuevo Customer </Button>
+      </Link>
+
           <Table striped hover>
             <thead>
               <tr>
