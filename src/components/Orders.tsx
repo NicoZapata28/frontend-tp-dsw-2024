@@ -31,26 +31,21 @@ const Orders = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([]);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
+  // Polling de las órdenes cada 10 segundos
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [ordersData, employeesData, customersData, materialsData] = await Promise.all([
-          ordersService.getAll(),
-          employeeService.getAll(),
-          customerService.getAll(),
-          materialService.getAll(),
-        ]);
-        setOrders(ordersData);
-        setEmployees(employeesData);
-        setCustomers(customersData);
-        setMaterials(materialsData);
-      } catch (error) {
-        console.error("Error loading data:", error);
-      }
-    };
+    const fetchData = () => {
+      ordersService.getAll().then((data) => setOrders(data))
+      employeeService.getAll().then((data) => setEmployees(data))
+      customerService.getAll().then((data) => setCustomers(data))
+      materialService.getAll().then((data) => setMaterials(data))
+    }
 
-    fetchData();
-  }, []);
+    fetchData(); // Fetch inicial
+    const intervalId = setInterval(fetchData, 5000); // Poll cada 5 segundos
+
+    return () => clearInterval(intervalId); // Limpiar el intervalo cuando el componente se desmonta
+  }, [])
+
 
   const getEmployeeName = (idEmployee: string) => {
     const employee = employees.find((e) => e.id === idEmployee);
