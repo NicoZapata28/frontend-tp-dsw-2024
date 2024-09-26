@@ -11,6 +11,8 @@ import { IEmployee } from "../services/employee.ts"
 import { IMaterial } from "../services/materials.ts"
 import Table from "react-bootstrap/Table"
 import Button from "react-bootstrap/Button"
+import AddOrder from "./AddOrder.tsx"
+
 
 const formatDate = (date: Date): string => {
   if (!(date instanceof Date) || isNaN(date.getTime())) {
@@ -77,6 +79,7 @@ const Orders = () => {
   return (
     <div className="container">
       <h1>Orders</h1>
+      <AddOrder />
       <Table striped hover>
         <thead>
           <tr>
