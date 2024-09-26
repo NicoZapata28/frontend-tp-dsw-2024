@@ -31,11 +31,19 @@ const Orders = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([])
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null) // Estado para controlar la orden expandida
 
+  // Polling de las órdenes cada 10 segundos
   useEffect(() => {
-    ordersService.getAll().then((data) => setOrders(data))
-    employeeService.getAll().then((data) => setEmployees(data))
-    customerService.getAll().then((data) => setCustomers(data))
-    materialService.getAll().then((data) => setMaterials(data))
+    const fetchData = () => {
+      ordersService.getAll().then((data) => setOrders(data))
+      employeeService.getAll().then((data) => setEmployees(data))
+      customerService.getAll().then((data) => setCustomers(data))
+      materialService.getAll().then((data) => setMaterials(data))
+    }
+
+    fetchData(); // Fetch inicial
+    const intervalId = setInterval(fetchData, 5000); // Poll cada 5 segundos
+
+    return () => clearInterval(intervalId); // Limpiar el intervalo cuando el componente se desmonta
   }, [])
 
   const getEmployeeName = (idEmployee: string) => {
