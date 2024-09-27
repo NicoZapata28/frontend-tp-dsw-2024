@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react"
-import React from "react"
-import customersService from "../services/customer.ts"
-import ordersService from "../services/orders.ts"
-import materialsService from "../services/materials.ts"
-import { ICustomer } from "../services/customer.ts"
-import { IOrder } from "../services/orders.ts"
-import { IMaterial } from "../services/materials.ts"
-import Table from 'react-bootstrap/Table'
-import Button from 'react-bootstrap/Button'
+import { useState, useEffect } from "react";
+import React from "react";
+import customersService from "../services/customer.ts";
+import ordersService from "../services/orders.ts";
+import materialsService from "../services/materials.ts";
+import { ICustomer } from "../services/customer.ts";
+import { IOrder } from "../services/orders.ts";
+import { IMaterial } from "../services/materials.ts";
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 
 const Customers = () => {
     const [customers, setCustomers] = useState<ICustomer[]>([]);
-    const [orders, setOrders] = useState<IOrder[]>([]); 
-    const [materials, setMaterials] = useState<IMaterial[]>([]); 
-    const [expandedCustomers, setExpandedCustomers] = useState<Set<string>>(new Set()); // Estado para múltiples clientes expandidos
+    const [orders, setOrders] = useState<IOrder[]>([]);
+    const [materials, setMaterials] = useState<IMaterial[]>([]);
+    const [expandedCustomers, setExpandedCustomers] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -40,12 +40,21 @@ const Customers = () => {
         setExpandedCustomers(prev => {
             const newSet = new Set(prev);
             if (newSet.has(customerId)) {
-                newSet.delete(customerId); // Si ya está expandido, lo cerramos
+                newSet.delete(customerId);
             } else {
-                newSet.add(customerId); // Si no está, lo abrimos
+                newSet.add(customerId);
             }
             return newSet;
         });
+    };
+
+    const handleDelete = async (customerId: string) => {
+        try {
+            await customersService.remove(customerId);
+            setCustomers(prev => prev.filter(c => c.id !== customerId)); // Actualizar el estado local
+        } catch (error) {
+            setError("Error deleting customer");
+        }
     };
 
     const getMaterialName = (idProduct: string) => {
@@ -90,6 +99,13 @@ const Customers = () => {
                                     >
                                         {expandedCustomers.has(c.id) ? "Ocultar compras" : "Mostrar compras"}
                                     </Button>
+                                    <Button
+                                        variant="danger"
+                                        onClick={() => handleDelete(c.id)}
+                                        style={{ marginLeft: '10px' }}
+                                    >
+                                        Eliminar
+                                    </Button>
                                 </td>
                             </tr>
 
@@ -101,8 +117,8 @@ const Customers = () => {
                                             <ul>
                                                 {orders
                                                     .filter(order => order.idCustomer === c.id)
-                                                    .map((order, index) => (
-                                                        <li key={index}>
+                                                    .map((order) => (
+                                                        <li key={order.id}>
                                                             {order.details.map(detail => (
                                                                 <div key={detail.idProduct}>
                                                                     {getMaterialName(detail.idProduct)} - {detail.quantity} x ${detail.price} (Fecha: {new Date(order.orderDate).toLocaleDateString()})
@@ -122,6 +138,5 @@ const Customers = () => {
         </div>
     );
 };
-
 
 export default Customers;
