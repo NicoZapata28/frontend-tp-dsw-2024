@@ -32,8 +32,11 @@ const Orders = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [materials, setMaterials] = useState<IMaterial[]>([]);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
-
-  // Polling de las órdenes cada 10 segundos
+  const [searchEmployee, setSearchEmployee] = useState<string>(""); 
+  const [searchCustomer, setSearchCustomer] = useState<string>(""); 
+  const [sortDateOrder, setSortDateOrder] = useState<string>("none"); 
+  const [sortTotalCostOrder, setSortTotalCostOrder] = useState<string>("none"); 
+  
   useEffect(() => {
     const fetchData = () => {
       ordersService.getAll().then((data) => setOrders(data))
@@ -76,61 +79,155 @@ const Orders = () => {
     }
   };
 
+  const filteredOrders = orders
+    .filter((order) =>
+      getEmployeeName(order.idEmployee)
+        .toLowerCase()
+        .includes(searchEmployee.toLowerCase())
+    )
+    .filter((order) =>
+      getCustomerName(order.idCustomer)
+        .toLowerCase()
+        .includes(searchCustomer.toLowerCase())
+    );
+
+    const sortedOrdersByDate = filteredOrders.sort((a, b) => {
+      if (sortDateOrder === "asc") {
+        return new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime();
+      } else if (sortDateOrder === "desc") {
+        return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
+      }
+      return 0;
+    });
+    
+    const sortedOrders = sortedOrdersByDate.sort((a, b) => {
+      if (sortTotalCostOrder === "asc") {
+        return a.totalCost - b.totalCost;
+      } else if (sortTotalCostOrder === "desc") {
+        return b.totalCost - a.totalCost;
+      }
+      return 0;
+    });
+
+    const toggleDateSortOrder = () => {
+      setSortDateOrder((prevOrder) => {
+        if (prevOrder === "none") return "asc";
+        if (prevOrder === "asc") return "desc";
+        return "none";
+      });
+    };
+
+    const toggleTotalCostSortOrder = () => {
+      setSortTotalCostOrder((prevOrder) => {
+        if (prevOrder === "none") return "asc";
+        if (prevOrder === "asc") return "desc";
+        return "none";
+      });
+    };
+
   return (
-    <div className="container">
-      <h1>Orders</h1>
-      <AddOrder />
-      <Table striped hover>
-        <thead>
-          <tr>
-            <th>Employee</th>
-            <th>Customer</th>
-            <th>TotalCost</th>
-            <th>OrderDate</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <React.Fragment key={order.id}>
-              <tr className="orders">
-                <td>{getEmployeeName(order.idEmployee)}</td>
-                <td>{getCustomerName(order.idCustomer)}</td>
-                <td>{order.totalCost}</td>
-                <td>{formatDate(new Date(order.orderDate))}</td>
-                <td>
-                  <Button variant="primary" onClick={() => toggleDetails(order.id)}>
-                    {expandedOrder === order.id ? "Ocultar detalles" : "Mostrar detalles"}
-                  </Button>
-                  <Button variant="danger" onClick={() => handleDelete(order.id)}>
-                    Eliminar
-                  </Button>
+  <div className="container">
+    <h1>Orders</h1>
+
+    {/* Filtros de búsqueda */}
+    <input
+      type="text"
+      placeholder="Search by employee name"
+      value={searchEmployee}
+      onChange={(e) => setSearchEmployee(e.target.value)}
+      className="mb-3"
+    />
+    <input
+      type="text"
+      placeholder="Search by customer name"
+      value={searchCustomer}
+      onChange={(e) => setSearchCustomer(e.target.value)}
+      className="mb-3"
+    />
+
+    {/* Componente para agregar una nueva orden */}
+    <AddOrder />
+
+    <Table striped hover>
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Customer</th>
+          <th>
+            TotalCost
+            <button onClick={toggleTotalCostSortOrder}>
+              {sortTotalCostOrder === "asc"
+                ? "↑"
+                : sortTotalCostOrder === "desc"
+                ? "↓"
+                : "↔"}
+            </button>
+          </th>
+          <th>
+            OrderDate
+            <button onClick={toggleDateSortOrder}>
+              {sortDateOrder === "asc"
+                ? "↑"
+                : sortDateOrder === "desc"
+                ? "↓"
+                : "↔"}
+            </button>
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedOrders.map((order) => (
+          <React.Fragment key={order.id}>
+            <tr className="orders">
+              <td>{getEmployeeName(order.idEmployee)}</td>
+              <td>{getCustomerName(order.idCustomer)}</td>
+              <td>{order.totalCost}</td>
+              <td>{formatDate(new Date(order.orderDate))}</td>
+              <td>
+                <Button
+                  variant="primary"
+                  onClick={() => toggleDetails(order.id)}
+                >
+                  {expandedOrder === order.id
+                    ? "Ocultar detalles"
+                    : "Mostrar detalles"}
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(order.id)}
+                  className="ms-2"
+                >
+                  Eliminar
+                </Button>
+              </td>
+            </tr>
+
+            {/* Detalles de la orden */}
+            {expandedOrder === order.id && (
+              <tr>
+                <td colSpan={5}>
+                  <div className="order-details">
+                    <strong>Detalles de la orden:</strong>
+                    {order.details && order.details.length > 0 ? (
+                      order.details.map((detail, index) => (
+                        <div key={index}>
+                          {getMaterialName(detail.idProduct)} - {detail.quantity} x ${detail.price}
+                        </div>
+                      ))
+                    ) : (
+                      <div>No hay detalles disponibles.</div>
+                    )}
+                  </div>
                 </td>
               </tr>
-              {expandedOrder === order.id && (
-                <tr>
-                  <td colSpan={5}>
-                    <div className="order-details">
-                      <strong>Detalles de la orden:</strong>
-                      {order.details && order.details.length > 0 ? (
-                        order.details.map((detail, index) => (
-                          <div key={index}>
-                            {getMaterialName(detail.idProduct)} - {detail.quantity} x ${detail.price}
-                          </div>
-                        ))
-                      ) : (
-                        <div>No hay detalles disponibles.</div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </Table>
-    </div>
-  );
+            )}
+          </React.Fragment>
+        ))}
+      </tbody>
+    </Table>
+  </div>
+)
 };
 
 export default Orders;
