@@ -15,22 +15,32 @@ const Materials = () => {
   const [stockSortOrder, setStockSortOrder] = useState<string>("none");
   const [costSortOrder, setCostSortOrder] = useState<string>("none");
   const [showNoStock, setShowNoStock] = useState(false) // Estado para mostrar solo materiales sin stock
+  const [visibleDescriptions, setVisibleDescriptions] = useState<string[]>([])
   
   useEffect(() => {
     materialsService.getAll().then(data => {
       setMaterials(data);
       
-      const uniqueCategories = Array.from(new Set(data.map(m => m.category)));
-      const uniqueBrands = Array.from(new Set(data.map(m => m.brand)));
-      setCategories(uniqueCategories);
-      setBrands(uniqueBrands);
-    });
-  }, []);
+      const uniqueCategories = Array.from(new Set(data.map(m => m.category)))
+      const uniqueBrands = Array.from(new Set(data.map(m => m.brand)))
+      setCategories(uniqueCategories)
+      setBrands(uniqueBrands)
+    })
+  }, [])
 
   // Alternar entre mostrar materiales con stock y sin stock
   const toggleShowNoStock = () => {
-    setShowNoStock(!showNoStock)
-  }
+    setShowNoStock(!showNoStock);
+  };
+
+  // Alternar la visibilidad de la descripción de un material
+  const toggleDescription = (id: string) => {
+    setVisibleDescriptions((prevVisible) =>
+      prevVisible.includes(id)
+        ? prevVisible.filter((visibleId) => visibleId !== id) // Eliminamos el ID si ya está visible
+        : [...prevVisible, id] // Agregamos el ID si no está visible
+    );
+  };
 
   const toggleStockSortOrder = () => {
     if (stockSortOrder === "none") setStockSortOrder("asc");
@@ -65,97 +75,123 @@ const Materials = () => {
       return 0;
     });
     
-  return (
-    <div className="container">
-      <h1>Materials</h1>
-      {/* Botón para alternar la visibilidad de los materiales sin stock */}
-      <Button variant="primary" onClick={toggleShowNoStock}>
-        {showNoStock ? "Mostrar materiales con stock" : "Mostrar materiales sin stock"}
-      </Button>
-      
-      {/* Filtro por categoría */}
-      <Form.Select
-        value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
-        className="mt-3"
-      >
-        <option value="All">All Categories</option>
-        {categories.map(category => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </Form.Select>
+return (
+  <div className="container">
+    <h1>Materials</h1>
 
-      {/* Filtro por marca */}
-      <Form.Select
-        value={selectedBrand}
-        onChange={(e) => setSelectedBrand(e.target.value)}
-        className="mt-3"
-      >
-        <option value="All">All Brands</option>
-        {brands.map(brand => (
-          <option key={brand} value={brand}>
-            {brand}
-          </option>
-        ))}
-      </Form.Select>
+    {/* Botón para alternar entre mostrar materiales con o sin stock */}
+    <Button variant="primary" onClick={toggleShowNoStock}>
+      {showNoStock ? "Mostrar materiales con stock" : "Mostrar materiales sin stock"}
+    </Button>
 
-      {/* Filtro por nombre del producto */}
-      <input
-        type="text"
-        placeholder="Search by product name"
-        value={searchProduct}
-        onChange={(e) => setSearchProduct(e.target.value)}
-        className="mt-3"
-      />
+    {/* Filtro por categoría */}
+    <Form.Select
+      value={selectedCategory}
+      onChange={(e) => setSelectedCategory(e.target.value)}
+      className="mt-3"
+    >
+      <option value="All">All Categories</option>
+      {categories.map(category => (
+        <option key={category} value={category}>
+          {category}
+        </option>
+      ))}
+    </Form.Select>
 
-<Table striped hover className="mt-3">
+    {/* Filtro por marca */}
+    <Form.Select
+      value={selectedBrand}
+      onChange={(e) => setSelectedBrand(e.target.value)}
+      className="mt-3"
+    >
+      <option value="All">All Brands</option>
+      {brands.map(brand => (
+        <option key={brand} value={brand}>
+          {brand}
+        </option>
+      ))}
+    </Form.Select>
+
+    {/* Filtro por nombre del producto */}
+    <input
+      type="text"
+      placeholder="Search by product name"
+      value={searchProduct}
+      onChange={(e) => setSearchProduct(e.target.value)}
+      className="mt-3"
+    />
+
+    {filteredMaterials.length === 0 ? (
+      <p className="mt-3">
+        {showNoStock ? "No hay materiales sin stock" : "No hay materiales disponibles"}
+      </p>
+    ) : (
+      <Table striped hover className="mt-3">
         <thead>
           <tr>
             <th>Image</th>
             <th>Category</th>
             <th>Product</th>
             <th>Brand</th>
-            <th>Description</th>
             <th>
-              Stock 
+              Stock
               <button onClick={toggleStockSortOrder}>
                 {stockSortOrder === "asc" ? "↑" : stockSortOrder === "desc" ? "↓" : "↔"}
               </button>
             </th>
             <th>
-              Cost 
+              Cost
               <button onClick={toggleCostSortOrder}>
                 {costSortOrder === "asc" ? "↑" : costSortOrder === "desc" ? "↓" : "↔"}
               </button>
             </th>
+            <th>Description</th>
           </tr>
         </thead>
         <tbody>
-          {sortedMaterials.map(m => (
+          {sortedMaterials.map((m) => (
             <tr className="materials" key={m.id}>
               <td>
                 {m.image && (
                   <img
                     src={typeof m.image === 'string' ? m.image : URL.createObjectURL(m.image)}
                     alt={m.name}
-                    style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                    }}
                   />
                 )}
               </td>
               <td>{m.category}</td>
               <td>{m.name}</td>
               <td>{m.brand}</td>
-              <td>{m.description}</td>
               <td>{m.stock}</td>
               <td>${m.cost}</td>
+              <td>
+                <Button
+                  onClick={() => toggleDescription(m.id)}
+                  style={{
+                    backgroundColor: visibleDescriptions.includes(m.id) ? "white" : "#737373",
+                    color: visibleDescriptions.includes(m.id) ? "black" : "white",
+                    border: "1px solid black",
+                  }}
+                >
+                  {visibleDescriptions.includes(m.id) ? "Ocultar descripción" : "Mostrar descripción"}
+                </Button>
+                {/* Mostrar la descripción solo si está visible */}
+                {visibleDescriptions.includes(m.id) && (
+                  <p className="mt-2">{m.description}</p>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </Table>
-    </div>
-  );
+    )}
+  </div>
+)
 };
 
-export default Materials
+export default Materials;

@@ -2,8 +2,10 @@ import { useState, useEffect } from "react"
 import ordersService, {IOrder} from '../services/orders'
 import customersService, {ICustomer} from '../services/customer.ts'
 import materialsService, {IMaterial} from '../services/materials.ts'
+import {jwtDecode} from 'jwt-decode'
 
 const initialOrder: IOrder = {
+  id:'',
   idEmployee: '',
   idCustomer: '',
   totalCost: 0,
@@ -56,10 +58,31 @@ const AddOrder = () =>{
     setFilteredMaterials(results)
   }, [searchMaterialQuery, materials])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setOrder({ ...order, [name]: value })
+  interface DecodedToken {
+    id: string
+    cuil: string
+    name: string
+    exp: number
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      const decodedToken = jwtDecode<DecodedToken>(token)
+      setOrder((prevOrder) => ({
+        ...prevOrder,
+        idEmployee: decodedToken.id
+      }))
+    }
+  }, [])
+
+  useEffect(() => {
+    const total = order.details.reduce((acc, detail) => acc + detail.price, 0);
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      totalCost: total,
+    }));
+  }, [order.details])
 
   const handleDetailChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -76,10 +99,34 @@ const AddOrder = () =>{
   const handleMaterialChange = (index: number, e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedMaterial = materials.find(material => material.id === e.target.value)
     if (selectedMaterial) {
-      const updatedDetails = order.details.map((detail, i) =>
-        i === index ? { ...detail, idProduct: selectedMaterial.id, price: selectedMaterial.cost } : detail
-      )
+      const updatedDetails = [...order.details];
+      updatedDetails[index] = {
+        ...updatedDetails[index],
+        idProduct: selectedMaterial.id,
+        quantity: 1, 
+        price: selectedMaterial.cost
+      }
+  
       setOrder({ ...order, details: updatedDetails })
+    }
+  }
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const updatedDetails = [...order.details]
+    const newQuantity = parseInt(e.target.value, 10)
+  
+    if (!isNaN(newQuantity) && newQuantity > 0) {
+      const selectedMaterial = materials.find(material => material.id === updatedDetails[index].idProduct)
+  
+      if (selectedMaterial) {
+        updatedDetails[index] = {
+          ...updatedDetails[index],
+          quantity: newQuantity,
+          price: selectedMaterial.cost * newQuantity,
+        }
+  
+        setOrder({ ...order, details: updatedDetails })
+      }
     }
   }
 
@@ -122,7 +169,12 @@ const AddOrder = () =>{
     <form onSubmit={handleSubmit}>
       <div>
         <label>Employee ID</label>
-        <input type="text" name="idEmployee" value={order.idEmployee} onChange={handleInputChange} required />
+        <input
+          type="text"
+          name="idEmployee"
+          value={order.idEmployee}
+          readOnly
+        />
       </div>
 
       <div>
@@ -145,11 +197,6 @@ const AddOrder = () =>{
             ))}
           </select>
         )}
-      </div>
-
-      <div>
-        <label>Total Cost</label>
-        <input type="number" name="totalCost" value={order.totalCost} onChange={handleInputChange} required />
       </div>
 
       {order.details.map((detail, index) => (
@@ -177,8 +224,9 @@ const AddOrder = () =>{
           <input
             type="number"
             name="quantity"
+            min="1"
             value={detail.quantity}
-            onChange={(e) => handleDetailChange(index, e)}
+            onChange={(e) => handleQuantityChange(e, index)}
             required
           />
           <label>Price</label>
@@ -192,6 +240,17 @@ const AddOrder = () =>{
           <button type="button" onClick={() => removeDetail(index)}>Remove</button>
         </div>
       ))}
+
+      <div>
+        <label>Total Cost</label>
+        <input
+          type="number"
+          name="totalCost"
+          value={order.totalCost}
+          readOnly
+          required
+        />
+      </div>
 
       <button type="button" onClick={addDetail}>Add Product</button>
       <button type="submit">Create Order</button>

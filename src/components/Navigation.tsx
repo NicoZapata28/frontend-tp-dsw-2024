@@ -6,9 +6,10 @@ import faceStore from '../img/face-store.svg'
 
 interface NavigationProps{
   onLogout: () => void
+  employeeName: string
 }
 
-const Navigation:React.FC<NavigationProps> = ({onLogout}) =>{
+const Navigation:React.FC<NavigationProps> = ({onLogout, employeeName}) =>{
   return(
     <Navbar bg="dark" data-bs-theme="dark" expand="xl" className="bg-body-tertiary">
       <Container>
@@ -27,14 +28,13 @@ const Navigation:React.FC<NavigationProps> = ({onLogout}) =>{
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/Materials">Materials</Nav.Link>
-            <Nav.Link href="/Customers" >Customers</Nav.Link> {/*Indicar link de Customer.tsx */}
-            <Nav.Link href="/Orders" >Orders</Nav.Link> {/*Indicar link de Orders.tsx */}
-            <NavDropdown title="Profile" id="basic-nav-dropdown">
+            <Nav.Link href="/Customers" >Customers</Nav.Link>
+            <Nav.Link href="/Orders" >Orders</Nav.Link>
+            <NavDropdown title={employeeName} id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">My profile</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
-                Action
+                Balance
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Another action</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={onLogout}>
                 Close session
