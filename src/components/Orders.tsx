@@ -13,9 +13,6 @@ import { IPayment } from "../services/payments.ts"; // Asegúrate de importar la
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 
-//BORRAR DPS
-import AddOrder from "./AddOrder.tsx"
-
 const Orders = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -118,11 +115,6 @@ const Orders = () => {
   return (
     <div className="container">
       <h1>Orders</h1>
-
-      {/* BORRAR DESPUES */}
-
-      <AddOrder />
-
       <input
         type="text"
         placeholder="Search by customer name"
