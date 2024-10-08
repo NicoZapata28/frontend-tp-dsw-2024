@@ -1,19 +1,20 @@
 import axios from 'axios'
 const baseUrl = 'http://localhost:3006/api/payments'
 
-export interface IInstallmentsDetails {
-  installmentN: number,
-  paymentDate: Date,
-  amount: number,
-  paid: string // "Y" or "N"
+export interface IPayment{
+  idOrder: string,
+  numberOfInstallments: number, // 0 for Cash
+  paid: string, // Y or N
+  installmentsDetails: IInstallmentsDetails[],
+  id?: string
 }
 
-export interface IPayment {
-  idOrder: string,
-  numberOfInstallments: number,
-  paid: string, // "Y" or "N"
-  installmentsDetails: IInstallmentsDetails[],
-  id?: string // optional since the backend generates it
+export interface IInstallmentsDetails {
+  installmentN: number, 
+  paymentDate: string, 
+  amount: number,
+  paid: string,
+  _id?: string
 }
 
 interface IPaymentResponse {

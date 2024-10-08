@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import ordersService, {IOrder} from '../services/orders'
 import customersService, {ICustomer} from '../services/customer.ts'
 import materialsService, {IMaterial} from '../services/materials.ts'
+import paymentService, {IPayment, IInstallmentsDetails} from '../services/payments.ts'
 import {jwtDecode} from 'jwt-decode'
 
 const initialOrder: IOrder = {
@@ -9,6 +10,7 @@ const initialOrder: IOrder = {
   idEmployee: '',
   idCustomer: '',
   totalCost: 0,
+  paymentMethod: '',
   orderDate: '',
   details: [{ idProduct: '', quantity: 0, price: 0 }],
 }
@@ -22,6 +24,10 @@ const AddOrder = () =>{
   const [filteredMaterials, setFilteredMaterials] = useState<IMaterial[]>([])
   const [searchMaterialQuery, setSearchMaterialQuery] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
+  const [paymentMethod, setPaymentMethod] = useState<string>('') // "C" for cash, "I" for installments
+  const [numberOfInstallments, setNumberOfInstallments] = useState<number>(1)
+  const [installmentDetails, setInstallmentDetails] = useState<IInstallmentsDetails[]>([])
+
 
   useEffect(() => {
       const fetchCustomersAndMaterials = async () => {
@@ -39,7 +45,7 @@ const AddOrder = () =>{
           console.error('Error fetching data:', error)
           setLoading(false)
         }
-      };
+      }
   
       fetchCustomersAndMaterials()
     }, [])
@@ -150,16 +156,71 @@ const AddOrder = () =>{
     setOrder({ ...order, details: updatedDetails })
   }
 
+  const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const method = e.target.value;
+    setPaymentMethod(method);
+
+    if (method === 'I') {  // Si es en cuotas
+      const numInstallments = prompt("Ingrese el número de cuotas:");
+      const numberOfInstallments = numInstallments ? parseInt(numInstallments, 10) : 1;
+      setNumberOfInstallments(numberOfInstallments);
+      
+      // Generar detalles de cuotas
+      const totalCost = order.totalCost;
+      const installmentAmount = totalCost / numberOfInstallments;
+      const installments: IInstallmentsDetails[] = [];
+
+      for (let i = 0; i < numberOfInstallments; i++) {
+        const paymentDate = new Date()
+        paymentDate.setMonth(paymentDate.getMonth() + i)  // Aumenta un mes por cuota
+
+        installments.push({
+          installmentN: i + 1,
+          paymentDate: paymentDate.toISOString(),
+          amount: installmentAmount,
+          paid: 'N'
+        })
+      }
+
+      setInstallmentDetails(installments)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const currentOrder: IOrder = {
       ...order,
-      orderDate: new Date().toISOString(), 
+      paymentMethod,
+      orderDate: new Date().toISOString(),
     }
     try {
-      await ordersService.create(currentOrder)
+      const createdOrder = await ordersService.create(currentOrder)
+      const orderId = createdOrder.id
+
+      if (createdOrder.paymentMethod === 'I') {
+        const payment: IPayment = {
+          idOrder: orderId,
+          numberOfInstallments,
+          paid: 'N',
+          installmentsDetails: installmentDetails
+        }
+
+        await paymentService.create(payment)
+      }else if(createdOrder.paymentMethod === 'C'){
+        const payment: IPayment = {
+          idOrder: orderId,
+          numberOfInstallments: 0,
+          paid: 'Y',
+          installmentsDetails: []
+        }
+
+        await paymentService.create(payment)
+      }
       alert('Order created successfully')
       setOrder(initialOrder)
+      setInstallmentDetails([])
+      setPaymentMethod('')
+      setNumberOfInstallments(1)
     } catch (error) {
       console.error('Error creating order:', error)
     }
@@ -241,6 +302,8 @@ const AddOrder = () =>{
         </div>
       ))}
 
+      <button type="button" onClick={addDetail}>Add Product</button>
+
       <div>
         <label>Total Cost</label>
         <input
@@ -251,8 +314,27 @@ const AddOrder = () =>{
           required
         />
       </div>
+      
+      <div>
+        <label>Método de pago</label>
+        <select value={paymentMethod} onChange={handlePaymentMethodChange}>
+          <option value="">Seleccionar método</option>
+          <option value="C">Efectivo</option>
+          <option value="I">Cuotas</option>
+        </select>
+      </div>
 
-      <button type="button" onClick={addDetail}>Add Product</button>
+      {paymentMethod === 'I' && (
+        <div>
+          <h4>Detalles de cuotas:</h4>
+          {installmentDetails.map((installment, index) => (
+            <div key={index}>
+              <p>Cuota {installment.installmentN}: ${installment.amount.toFixed(2)} - Fecha de pago: {new Date(installment.paymentDate).toLocaleDateString()}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      
       <button type="submit">Create Order</button>
     </form>
   )
