@@ -4,28 +4,26 @@ import ordersService from "../services/orders.ts";
 import employeeService from "../services/employee.ts";
 import customerService from "../services/customer.ts";
 import materialService from "../services/materials.ts";
-import paymentsService from "../services/payments.ts"; // Asegúrate de importar tu servicio de pagos
+import paymentsService from "../services/payments.ts";
 import { IOrder } from "../services/orders.ts";
 import { ICustomer } from "../services/customer.ts";
 import { IEmployee } from "../services/employee.ts";
 import { IMaterial } from "../services/materials.ts";
-import { IPayment } from "../services/payments.ts"; // Asegúrate de importar la interfaz de pagos
+import { IPayment } from "../services/payments.ts";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-
 
 const Orders = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [employees, setEmployees] = useState<IEmployee[]>([]);
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [materials, setMaterials] = useState<IMaterial[]>([]);
-  const [payments, setPayments] = useState<IPayment[]>([]); // Estado para pagos
+  const [payments, setPayments] = useState<IPayment[]>([]);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchName, setSearchName] = useState<string>("");
   const [sortDateOrder, setSortDateOrder] = useState<string>("asc");
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,14 +33,14 @@ const Orders = () => {
           employeeService.getAll(),
           customerService.getAll(),
           materialService.getAll(),
-          paymentsService.getAll(), // Obtener todos los pagos
+          paymentsService.getAll(),
         ]);
-        
+
         setOrders(ordersData);
         setEmployees(employeesData);
         setCustomers(customersData);
         setMaterials(materialsData);
-        setPayments(paymentsData); // Guardar los pagos
+        setPayments(paymentsData);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Error fetching data");
@@ -78,25 +76,34 @@ const Orders = () => {
   const handleDelete = async (orderId: string) => {
     try {
       await ordersService.remove(orderId);
-      setOrders(prev => prev.filter(o => o.id !== orderId)); // Actualizar el estado local
+      setOrders(prev => prev.filter(o => o.id !== orderId));
     } catch (error) {
       setError("Error deleting order");
     }
   };
 
-  const getPaymentDetails = (orderNumber: string) => {
-    const payment = payments.find(p => p.orderNumber === orderNumber);
-    return payment ? payment.amount : 0; // Devuelve el monto pagado o 0 si no hay pago
+  const getPaymentDetails = (orderId: string) => {
+    const payment = payments.find(p => p.idOrder === orderId);
+    if (payment) {
+      const unpaidInstallments = payment.installmentsDetails.filter(installment => installment.paid === "N");
+      return { unpaidCount: unpaidInstallments.length, totalCount: payment.numberOfInstallments || 0, details: payment.installmentsDetails };
+    }
+    return { unpaidCount: 0, totalCount: 0, details: [] }; // Si no hay pago o todas están pagadas
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('es-ES').format(date); // Formato de fecha español
+    return new Intl.DateTimeFormat('es-ES').format(date);
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  const sortedOrders = [...orders].sort((a, b) => {
+  const filteredOrders = orders.filter(order => {
+    const customerName = getCustomerName(order.idCustomer);
+    return customerName.toLowerCase().includes(searchName.toLowerCase());
+  });
+
+  const sortedOrders = [...filteredOrders].sort((a, b) => {
     if (sortDateOrder === "asc") {
       return new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime();
     } else if (sortDateOrder === "desc") {
@@ -138,54 +145,61 @@ const Orders = () => {
           </tr>
         </thead>
         <tbody>
-          {sortedOrders.map((order) => (
-            <React.Fragment key={order.id}>
-              <tr className="orders">
-                <td>{getEmployeeName(order.idEmployee)}</td>
-                <td>{getCustomerName(order.idCustomer)}</td>
-                <td>{order.totalCost}</td>
-                <td>{formatDate(new Date(order.orderDate))}</td>
-                <td>
-                  <Button variant="primary" onClick={() => toggleDetails(order.id)}>
-                    {expandedOrder === order.id ? "Ocultar detalles" : "Mostrar detalles"}
-                  </Button>
-                  <Button variant="danger" onClick={() => handleDelete(order.id)} className="ms-2">
-                    Eliminar
-                  </Button>
-                </td>
-              </tr>
-
-              {/* Detalles de la orden */}
-              {expandedOrder === order.id && (
-                <tr>
-                  <td colSpan={5}>
-                    <div className="order-details">
-                      <strong>Detalles de la orden:</strong>
-                      {order.details && order.details.length > 0 ? (
-                        order.details.map((detail, index) => (
-                          <div key={index}>
-                            {getMaterialName(detail.idProduct)} - {detail.quantity} x ${detail.price}
-                          </div>
-                        ))
-                      ) : (
-                        <div>No hay detalles disponibles.</div>
-                      )}
-                      {/* Mostrar cuotas adeudadas */}
-                      <div>
-                        {getPaymentDetails(order.id) < order.totalCost ? (
-                          <span style={{ color: "red" }}>
-                            Dinero adeudado: ${order.totalCost - getPaymentDetails(order.id)}
-                          </span>
-                        ) : (
-                          <span style={{ color: "green" }}>Pago completado</span>
-                        )}
-                      </div>
-                    </div>
+          {sortedOrders.map((order) => {
+            const { unpaidCount, totalCount, details } = getPaymentDetails(order.id);
+            return (
+              <React.Fragment key={order.id}>
+                <tr className="orders">
+                  <td>{getEmployeeName(order.idEmployee)}</td>
+                  <td>{getCustomerName(order.idCustomer)}</td>
+                  <td>{order.totalCost}</td>
+                  <td>{formatDate(new Date(order.orderDate))}</td>
+                  <td>
+                    <Button variant="primary" onClick={() => toggleDetails(order.id)}>
+                      {expandedOrder === order.id ? "Ocultar detalles" : "Mostrar detalles"}
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete(order.id)} className="ms-2">
+                      Eliminar
+                    </Button>
                   </td>
                 </tr>
-              )}
-            </React.Fragment>
-          ))}
+
+                {expandedOrder === order.id && (
+                  <tr>
+                    <td colSpan={5}>
+                      <div className="order-details">
+                        <strong>Detalles de la orden:</strong>
+                        {order.details && order.details.length > 0 ? (
+                          order.details.map((detail, index) => (
+                            <div key={index}>
+                              {getMaterialName(detail.idProduct)} - {detail.quantity} x ${detail.price}
+                            </div>
+                          ))
+                        ) : (
+                          <div>No hay detalles disponibles.</div>
+                        )}
+                        <div>
+                          <strong>Cuotas adeudadas:</strong> {unpaidCount} / {totalCount}
+                        </div>
+                        {details.length > 0 && (
+                          <div>
+                            <strong>Detalles de las cuotas:</strong>
+                            <ul>
+                              {details.map((installment, index) => (
+                                <li key={index}>
+                                  Cuota {index + 1}: {formatDate(new Date(installment.paymentDate))} - ${installment.amount}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            );
+          })}
         </tbody>
       </Table>
     </div>
