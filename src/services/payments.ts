@@ -2,10 +2,19 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3006/api/payments'
 
 export interface IPayment{
-  paymentNumber: string,
-  orderNumber: string,
+  idOrder: string,
+  numberOfInstallments: number,
+  paid: string,
+  installmentsDetails: IInstallmentsDetails[],
+  id?: string
+}
+
+export interface IInstallmentsDetails {
+  installmentN: number, 
+  paymentDate: string,
   amount: number,
-  orderDate: Date
+  paid: string,
+  _id?: string
 }
 
 interface IPaymentResponse{

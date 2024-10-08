@@ -5,6 +5,7 @@ export interface IOrder{
   idEmployee: string,
   idCustomer: string,
   totalCost: number,
+  paymentMethod: string,
   orderDate: string,
   details: IOrderDetail[],
   id: string
