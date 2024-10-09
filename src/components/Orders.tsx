@@ -9,7 +9,7 @@ import { IOrder } from "../services/orders.ts";
 import { ICustomer } from "../services/customer.ts";
 import { IEmployee } from "../services/employee.ts";
 import { IMaterial } from "../services/materials.ts";
-import { IPayment } from "../services/payments.ts";
+import { IPayment, IInstallmentsDetails } from "../services/payments.ts"; // Asegúrate de que esto incluya IInstallmentsDetail
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 
@@ -88,11 +88,46 @@ const Orders = () => {
       const unpaidInstallments = payment.installmentsDetails.filter(installment => installment.paid === "N");
       return { unpaidCount: unpaidInstallments.length, totalCount: payment.numberOfInstallments || 0, details: payment.installmentsDetails };
     }
-    return { unpaidCount: 0, totalCount: 0, details: [] }; // Si no hay pago o todas están pagadas
+    return { unpaidCount: 0, totalCount: 0, details: [] };
   };
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('es-ES').format(date);
+  };
+
+  const handlePagar = async (orderId: string, installmentId: string | undefined) => {
+    if (!installmentId) {
+      console.error("El ID de la cuota no está definido.");
+      return;
+    }
+
+    const paymentToUpdate = payments.find(p => p.idOrder === orderId);
+    if (!paymentToUpdate) {
+      console.error("No se encontró el pago para la orden.");
+      return;
+    }
+
+    const updatedInstallments = paymentToUpdate.installmentsDetails.map(installment => {
+      if (installment._id === installmentId) {
+        return { ...installment, paid: "Y" }; 
+      }
+      return installment; 
+    });
+
+    const updatedPayment = {
+      ...paymentToUpdate,
+      installmentsDetails: updatedInstallments,
+    };
+
+    try {
+      await paymentsService.update(paymentToUpdate.id!, updatedPayment);
+      setPayments(prevPayments => 
+        prevPayments.map(p => (p.idOrder === orderId ? updatedPayment : p))
+      );
+      console.log(`Cuota ${installmentId} marcada como pagada.`); // Log para depuración
+    } catch (error) {
+      console.error("Error al actualizar el pago:", error);
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -186,9 +221,19 @@ const Orders = () => {
                           <div>
                             <strong>Detalles de las cuotas:</strong>
                             <ul>
-                              {details.map((installment, index) => (
-                                <li key={index}>
-                                  Cuota {index + 1}: {formatDate(new Date(installment.paymentDate))} - ${installment.amount}
+                              {details.map((installment: IInstallmentsDetails) => ( // Asegúrate de que IInstallmentsDetail tenga la propiedad 'number'
+                                <li key={installment._id}>
+                                  Cuota {installment.installmentN ? installment.installmentN : "N/A"} - ${installment.amount}
+                                  {installment.paid === "N" ? (
+                                    <Button 
+                                      className="ms-2" 
+                                      onClick={() => handlePagar(order.id, installment._id)} 
+                                    >
+                                      Pagar
+                                    </Button>
+                                  ) : (
+                                    <span className="ms-2" style={{ color: 'green' }}>Pagado</span>
+                                  )}
                                 </li>
                               ))}
                             </ul>
