@@ -263,7 +263,7 @@ const AddOrder = () =>{
             <option value="">Select a customer</option>
             {filteredCustomers.map((customer) => (
               <option key={customer.id} value={customer.id}>
-                {customer.dni}
+                {customer.dni} - {customer.name}
               </option>
             ))}
           </select>
@@ -286,7 +286,7 @@ const AddOrder = () =>{
               <option value="">Select a product</option>
               {filteredMaterials.map((material) => (
                 <option key={material.id} value={material.id}>
-                  {material.name} - {material.brand} - ${material.cost}
+                  {material.name} - {material.brand} - ${material.cost} - Stock: {material.stock}
                 </option>
               ))}
             </select>
