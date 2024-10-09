@@ -4,7 +4,7 @@ const baseUrl = 'http://localhost:3006/api/materials';
 
 export interface IMaterial {
   id: string
-  image: string | Blob
+  image?: string | Blob
   name: string
   description: string
   brand: string
@@ -41,22 +41,14 @@ const create = async (formData: FormData): Promise<IMaterial> => {
 }
 
 const update = async (id: string, newObject: IMaterial): Promise<IMaterial> => {
-  const formData = new FormData();
-  (Object.keys(newObject) as Array<keyof IMaterial>).forEach(key => {
-    const value = newObject[key];
-    if (value !== undefined) {
-      if (key === 'image' && value instanceof Blob) { 
-        formData.append(key, value, 'image.jpg')
-      } else {
-        formData.append(key, value.toString())
-      }
+  const dataToUpdate = {...newObject}
+  delete dataToUpdate.image
+  const response = await axios.put<IMaterial>(`${baseUrl}/${id}`, dataToUpdate, {
+    headers: {
+      'Content-Type': 'application/json', 
     }
   })
-  const response = await axios.put<IMaterial>(`${baseUrl}/${id}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
+
   return response.data
 }
 
