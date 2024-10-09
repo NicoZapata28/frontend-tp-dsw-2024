@@ -197,6 +197,16 @@ const AddOrder = () =>{
       const createdOrder = await ordersService.create(currentOrder)
       const orderId = createdOrder.id
 
+      for (const detail of currentOrder.details) {
+        const selectedMaterial = materials.find(material => material.id === detail.idProduct)
+        if (selectedMaterial) {
+          const updatedStock = selectedMaterial.stock - detail.quantity
+          await materialsService.update( selectedMaterial.id, {
+            ...selectedMaterial,
+            stock: updatedStock })
+        }
+      }
+
       if (createdOrder.paymentMethod === 'I') {
         const payment: IPayment = {
           idOrder: orderId,
