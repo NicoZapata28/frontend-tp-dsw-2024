@@ -12,6 +12,7 @@ import { IMaterial } from "../services/materials.ts";
 import { IPayment } from "../services/payments.ts";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import iconspagado from '../img/iconspagado.svg';
 
 const Orders = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -156,6 +157,7 @@ const Orders = () => {
                   <td>{order.totalCost}</td>
                   <td>{formatDate(new Date(order.orderDate))}</td>
                   <td>
+                   {unpaidCount === 0 && <img src={iconspagado} alt="Orden pagada" style={{ width: '20px', height: '20px' }} />}
                     <Button variant="primary" onClick={() => toggleDetails(order.id)}>
                       {expandedOrder === order.id ? "Ocultar detalles" : "Mostrar detalles"}
                     </Button>
