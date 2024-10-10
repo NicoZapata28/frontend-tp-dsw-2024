@@ -4,6 +4,7 @@ import { IMaterial } from "../services/materials.ts"
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form';
+import Badge from 'react-bootstrap/Badge'; 
 
 const Materials = () => {
   const [materials, setMaterials] = useState<IMaterial[]>([])
@@ -17,6 +18,8 @@ const Materials = () => {
   const [showNoStock, setShowNoStock] = useState(false) // Estado para mostrar solo materiales sin stock
   const [visibleDescriptions, setVisibleDescriptions] = useState<string[]>([])
   
+  const LOW_STOCK_THRESHOLD = 5; // Umbral para considerar "poco stock"
+  
   useEffect(() => {
     materialsService.getAll().then(data => {
       setMaterials(data);
@@ -25,6 +28,7 @@ const Materials = () => {
       const uniqueBrands = Array.from(new Set(data.map(m => m.brand)))
       setCategories(uniqueCategories)
       setBrands(uniqueBrands)
+      
     })
   }, [])
 
@@ -78,7 +82,7 @@ const Materials = () => {
 return (
   <div className="container">
     <h1>Materials</h1>
-
+     
     {/* Botón para alternar entre mostrar materiales con o sin stock */}
     <Button variant="primary" onClick={toggleShowNoStock}>
       {showNoStock ? "Mostrar materiales con stock" : "Mostrar materiales sin stock"}
@@ -167,7 +171,16 @@ return (
               <td>{m.category}</td>
               <td>{m.name}</td>
               <td>{m.brand}</td>
-              <td>{m.stock}</td>
+
+              <td>
+                {m.stock}
+                {m.stock > 0 && m.stock <= LOW_STOCK_THRESHOLD && (
+                    <Badge bg="warning" className="ml-2">
+                      Poco stock
+                    </Badge>
+                  )}
+                
+                </td>
               <td>${m.cost}</td>
               <td>
                 <Button
