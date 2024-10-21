@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
-import ordersService, {IOrder} from '../services/orders'
-import customersService, {ICustomer} from '../services/customer.ts'
-import materialsService, {IMaterial} from '../services/materials.ts'
-import paymentService, {IPayment, IInstallmentsDetails} from '../services/payments.ts'
+import ordersService, {IOrder} from '../../services/orders'
+import customersService, {ICustomer} from '../../services/customer.ts'
+import materialsService, {IMaterial} from '../../services/materials.ts'
+import paymentService, {IPayment, IInstallmentsDetails} from '../../services/payments.ts'
 import {jwtDecode} from 'jwt-decode'
 
 const initialOrder: IOrder = {

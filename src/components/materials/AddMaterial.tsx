@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import materialsService from '../services/materials.ts'
+import materialsService from '../../services/materials.ts'
 
 const AddMaterial = () => {
   const [formData, setFormData] = useState({

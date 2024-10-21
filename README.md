@@ -1,9 +1,11 @@
-# frontend-tp-dsw-2024
- 
+# Frontend - TP DSW 2024
+
 ## Descripción
+
 Este proyecto es una aplicación frontend para el trabajo práctico de la asignatura de Desarrollo de Software Web (DSW) 2024. El proyecto está configurado para utilizar tecnologías modernas de desarrollo web con un enfoque en React y TypeScript.
 
 ## Tecnologías utilizadas
+
 - **React**: Librería para la construcción de interfaces de usuario.
 - **TypeScript**: Superset de JavaScript que añade tipado estático opcional.
 - **Vite**: Herramienta de desarrollo rápida para aplicaciones web modernas.
@@ -13,13 +15,16 @@ Este proyecto es una aplicación frontend para el trabajo práctico de la asigna
 - **React Router DOM**: Librería para gestionar rutas en aplicaciones React.
 
 ## Scripts disponibles
+
 - `dev`: Inicia el servidor de desarrollo usando Vite.
 - `build`: Compila el proyecto y construye los archivos de producción.
 - `lint`: Ejecuta ESLint para verificar la calidad del código.
 - `preview`: Inicia un servidor local para previsualizar la aplicación construida.
 
 ## Dependencias
+
 ### Producción
+
 - `axios`: ^1.7.5
 - `bootstrap`: ^5.3.3
 - `jwt-decode`: ^4.0.0
@@ -29,6 +34,7 @@ Este proyecto es una aplicación frontend para el trabajo práctico de la asigna
 - `react-router-dom`: ^6.26.1
 
 ### Desarrollo
+
 - `@types/jwt-decode`: ^3.1.0
 - `@types/react`: ^18.3.3
 - `@types/react-dom`: ^18.3.0
@@ -42,7 +48,9 @@ Este proyecto es una aplicación frontend para el trabajo práctico de la asigna
 - `vite`: ^5.3.1
 
 ## Cómo instalar
-1. Clona este repositorio: https://github.com/NicoZapata28/frontend-tp-dsw-2024
+
+1. Clona este repositorio: <https://github.com/NicoZapata28/frontend-tp-dsw-2024>
 2. Ejecuta el siguiente comando para instalar las dependencias:
+
    ```bash
    npm install

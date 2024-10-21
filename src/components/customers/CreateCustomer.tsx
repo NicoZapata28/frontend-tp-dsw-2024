@@ -1,6 +1,6 @@
 import { useState } from "react"
-import customerService from "../services/customer"
-import { ICustomer } from "../services/customer"
+import customerService from "../../services/customer"
+import { ICustomer } from "../../services/customer"
 import { Form, Button, Container, Row, Col, Alert, Spinner } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 
