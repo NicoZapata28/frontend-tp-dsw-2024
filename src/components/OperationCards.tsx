@@ -1,33 +1,37 @@
-import { Container, Row, Col, Button} from 'react-bootstrap'
-import Icon1 from '../img/materials-icon.svg'
-import Icon2 from '../img/orders-icon.svg'
-import Icon3 from '../img/customers-icon.svg'
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import styles from '../styles/operationCards.module.css'; // Asegúrate de que la ruta es correcta
+import { Link } from 'react-router-dom';
+import Icon1 from '../img/materials-icon.svg';
+import Icon2 from '../img/orders-icon.svg';
+import Icon3 from '../img/customers-icon.svg';
+import Icon4 from '../img/balance-icon.svg';
 
-const OperationCards = () =>{
-  return(
+const operations = [
+  { path: '/Materials', icon: Icon1, label: 'Materials' },
+  { path: '/Orders', icon: Icon2, label: 'Orders' },
+  { path: '/Customers', icon: Icon3, label: 'Customers' },
+  { path: '/Balance', icon: Icon4, label: 'Balance' },
+];
+
+const OperationCards = () => {
+  return (
     <Container>
-      <Row className="mt-5 text-center g-2">
-        <Col md={4}>
-          <Button variant="dark" className="icon-button mx-1" href="/Materials">
-          <img src={Icon1} alt="Materials Icon" width="90" height="90" style={{ filter: 'invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)' }}/>
-            <div style={{fontSize: '18px', marginTop:'10px'}}>Materials</div>
-          </Button>
-        </Col>
-        <Col md={4}>
-          <Button variant="dark" className="icon-button mx-1" href="/Orders">
-            <img src={Icon2} alt="Orders Icon" width="90" height="90" style={{ filter: 'invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)' }}/>
-            <div style={{fontSize: '18px', marginTop:'10px'}}>Orders</div>
-          </Button>
-        </Col>
-        <Col md={4}>
-          <Button variant="dark" className="icon-button mx-1" href="/Customers">
-            <img src={Icon3} alt="Customers Icon" width="90" height="90" style={{ filter: 'invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)' }}/>
-            <div style={{fontSize: '18px', marginTop:'10px'}}>Customers</div>
-          </Button>
-        </Col>
+      <Row xs={1} md={2} className={styles.body}>
+        {operations.map((operation, idx) => (
+          <Col key={idx} className="d-flex justify-content-center">
+            <Link to={operation.path} style={{ textDecoration: 'none' }}>
+              <Card className={`${styles.card} text-center`} style={{ cursor: 'pointer' }}>
+                <Card.Img variant="top" src={operation.icon} style={{ width: '90px', height: '90px', margin: 'auto' }} />
+                <Card.Body>
+                  <Card.Title>{operation.label}</Card.Title>
+                </Card.Body>
+              </Card>
+            </Link>
+          </Col>
+        ))}
       </Row>
     </Container>
-  )
-}
+  );
+};
 
-export default OperationCards
+export default OperationCards;
