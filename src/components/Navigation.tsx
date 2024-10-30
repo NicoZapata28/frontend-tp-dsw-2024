@@ -11,7 +11,7 @@ interface NavigationProps{
 
 const Navigation:React.FC<NavigationProps> = ({onLogout, employeeName}) =>{
   return(
-    <Navbar bg="dark" data-bs-theme="dark" expand="xl" className="bg-body-tertiary">
+    <Navbar expand="x1" style={{ backgroundColor: '#000000' }} variant="dark">
       <Container>
         <Navbar.Brand href="/">
           <img 
