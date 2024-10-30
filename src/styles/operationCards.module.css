@@ -1,5 +1,4 @@
 .body {
-  margin-top: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,21 +6,32 @@
 }
 
 .card {
-  background-color: #bb86fc;
+  background-color: #bb86fc !important;
   border: none;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   width: 400px;
   height: 150px;
   margin: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .card:hover {
   transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-@media (max-width: 90%) {
+@media (max-width: 768px) {
   .card {
-    width: 90%;
+    width: 150px;
     height: 120px;
   }
+}
+
+.icon{
+  margin: auto;
+  padding-top: 20px;
+}
+
+.cardTitle{
+  color:white !important;
 }
