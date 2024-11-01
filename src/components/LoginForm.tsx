@@ -25,7 +25,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
         setErrorMessage(null)
       }, 5000)
     }
-  };
+  }
 
   return (
     <div className="login-container">
@@ -54,7 +54,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
 export default LoginForm;
