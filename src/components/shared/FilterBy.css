@@ -1,0 +1,25 @@
+.filter-by-container {
+  display: flex;
+  align-items: center;
+}
+
+.filter-by-button {
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.filter-by-button:hover {
+  background-color: #333;
+}
+
+.dropdown-icon {
+  margin-left: 10px;
+  width: 16px;
+  height: 16px;
+}
