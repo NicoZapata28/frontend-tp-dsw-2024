@@ -1,4 +1,4 @@
-import { Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap'
 
 const Footer = () => {
   return (
@@ -7,7 +7,8 @@ const Footer = () => {
         <p>© 2024 TecnoStore. All rights reserved.</p>
       </Container>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
+

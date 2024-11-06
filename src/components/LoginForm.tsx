@@ -1,25 +1,26 @@
 import { useState } from "react"
-import loginService from '../services/login.ts'
-import { Form, Button, Container, Alert } from 'react-bootstrap'
+import loginService from "../services/login.ts"
+import FaceStoreLogo from "../img/face-store.svg"
+import "./LoginForm.css"
 
 interface LoginFormProps {
   onLoginSuccess: () => void
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({onLoginSuccess}) => {
-  const [cuil, setCuil] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
+  const [cuil, setCuil] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
-    
+    event.preventDefault()
+
     try {
       const response = await loginService.login({ cuil, password })
-      localStorage.setItem('token', response.data.token)
+      localStorage.setItem("token", response.data.token)
       onLoginSuccess()
     } catch (error) {
-      setErrorMessage('Invalid CUIL or password')
+      setErrorMessage("CUIL o contraseña incorrectos")
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -27,36 +28,32 @@ const LoginForm: React.FC<LoginFormProps> = ({onLoginSuccess}) => {
   }
 
   return (
-    <Container
-      className="d-flex justify-content-center align-items-center vh-100"
-      style={{ backgroundImage: 'url("/path/to/your/image.jpg")', backgroundSize: 'cover' }}
-    >
-      <Form className="p-4 shadow rounded" style={{ maxWidth: '400px' }} onSubmit={handleLogin}>
-        <h2 className="text-center">Login</h2>
-        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-        <Form.Group controlId="cuil">
-          <Form.Label>CUIL:</Form.Label>
-          <Form.Control
-            type="text"
-            value={cuil}
-            onChange={({ target }) => setCuil(target.value)}
-            required
-          />
-        </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Label>Password:</Form.Label>
-          <Form.Control
-            type="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-            required
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit" className="w-100">
-          Login
-        </Button>
-      </Form>
-    </Container>
+    <div className="login-container">
+      <form onSubmit={handleLogin} className="login-form">
+        <img src={FaceStoreLogo} alt="logo" className="logo" />
+        <h2 className="title">Face-Store</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <input
+          type="text"
+          placeholder="CUIL"
+          value={cuil}
+          onChange={({ target }) => setCuil(target.value)}
+          className="input"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={({ target }) => setPassword(target.value)}
+          className="input"
+          required
+        />
+        <button type="submit" className="button">
+          Iniciar sesión
+        </button>
+      </form>
+    </div>
   )
 }
 
