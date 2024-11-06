@@ -1,33 +1,21 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import faceStore from '../img/face-store.svg';
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+import faceStore from '../img/face-store.svg'
 
 interface NavigationProps {
-  onLogout: () => void;
-  employeeName: string;
-  isMobile: boolean;
+  onLogout: () => void
+  employeeName: string
 }
 
 const Navigation: React.FC<NavigationProps> = ({ onLogout, employeeName }) => {
   return (
-    <Navbar
-      bg="dark"
-      data-bs-theme="dark"
-      expand="xl"
-      className="bg-body-tertiary"
-      style={{
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        zIndex: 1000, 
-      }}
-    >
+    <Navbar bg="dark" data-bs-theme="dark" expand="xl" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="/">
           <img
-            alt=""
+            alt='FaceStore Logo'
             src={faceStore}
             width="30"
             height="30"
@@ -55,7 +43,7 @@ const Navigation: React.FC<NavigationProps> = ({ onLogout, employeeName }) => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
-};
+  )
+}
 
-export default Navigation;
+export default Navigation
