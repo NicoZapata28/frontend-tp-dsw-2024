@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 26.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 291.97 291.97" style="enable-background:new 0 0 291.97 291.97;" xml:space="preserve">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 292 292" style="enable-background:new 0 0 292 292;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:none;stroke:#000000;stroke-width:8.5039;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st1{stroke:#000000;stroke-width:8.5039;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st0{fill:none;stroke:#BB86FC;stroke-width:8.5039;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:#BB86FC;stroke:#BB86FC;stroke-width:8.5039;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
-<g id="Layer_3">
-	<path class="st0" d="M162.34,93.42c3.62,4.32,15.92,20.08,15.91,43.41c-0.01,27.99-17.74,45.66-21.01,48.81"/>
-	<path class="st0" d="M197.02,58.75c6,6.66,30.18,34.98,30.17,78.08c-0.01,47.81-29.77,77.97-35.33,83.41"/>
-	<path class="st0" d="M232.83,22.94c8.42,9.05,44.96,50.32,44.96,113.89c-0.01,68.3-42.2,111.37-50.15,119.19"/>
-	<line class="st1" x1="14.16" y1="99.64" x2="14.16" y2="184.52"/>
-	<polyline class="st1" points="14.16,184.52 53.82,184.52 120.92,247.17 120.92,37 53.82,99.64 14.16,99.64 	"/>
-</g>
-<g id="Layer_2">
+<path class="st0" d="M162.3,93.4c3.6,4.3,15.9,20.1,15.9,43.4c0,28-17.7,45.7-21,48.8"/>
+<path class="st0" d="M197,58.8c6,6.7,30.2,35,30.2,78.1c0,47.8-29.8,78-35.3,83.4"/>
+<path class="st0" d="M232.8,22.9c8.4,9.1,45,50.3,45,113.9c0,68.3-42.2,111.4-50.1,119.2"/>
+<line class="st0" x1="14.2" y1="99.6" x2="14.2" y2="184.5"/>
+<polyline class="st1" points="14.2,184.5 53.8,184.5 120.9,247.2 120.9,37 53.8,99.6 14.2,99.6 "/>
+<g id="Layer_2_00000031192286498299535100000016051340514516394155_">
 </g>
 </svg>

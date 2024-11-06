@@ -1,6 +1,6 @@
-import audioIcon from './img/audio-icon.svg';
-import peripheralsIcon from './img/peripherals-icon.svg';
-import tabletsIcon from './img/tablets-icon.svg';
+import audioIcon from '../img/audio-icon.svg';
+import peripheralsIcon from '../img/peripherals-icon.svg';
+import tabletsIcon from '../img/tablets-icon.svg';
 
 export const getCategoryIcon = (category: string): string => {
   switch (category) {
