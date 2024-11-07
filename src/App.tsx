@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
-import Navigation from "./components/Navigation"
-import Materials from "./components/Materials"
-import Orders from "./components/Orders"
-import Home from "./components/Home"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Footer from "./components/Footer"
-import Customers from "./components/Customers"
-import LoginForm from "./components/LoginForm"
 import { jwtDecode } from 'jwt-decode'
+import LoginForm from "./components/LoginForm"
+import Navigation from "./components/Navigation"
+import Home from "./components/Home"
+import MaterialsPage from "./components/materials/MaterialsPage.tsx"
+import OrdersPage from "./components/orders/OrdersPage.tsx"
+import CustomersPage from "./components/customers/CustomersPage.tsx"
+import Footer from "./components/Footer"
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
@@ -46,9 +46,9 @@ const App = () => {
         <Navigation onLogout={handleLogout} employeeName={employeeName}/>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/materials" element={<Materials />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/customers" element={<Customers />} />
+          <Route path="/materials" element={<MaterialsPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/customers" element={<CustomersPage />} />
         </Routes>
         <Footer />
       </Router>
@@ -56,4 +56,4 @@ const App = () => {
   )
 }
 
-export default App;
+export default App

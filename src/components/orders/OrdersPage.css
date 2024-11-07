@@ -1,0 +1,18 @@
+.orders-page{
+  background-color: #121212;
+  color: #ffffff;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) and (max-width: 1024px){
+  .orders-page{
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1025px){
+  .orders-page{
+    padding: 60px;
+  }
+}
