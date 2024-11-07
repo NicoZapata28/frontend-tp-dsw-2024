@@ -1,0 +1,97 @@
+/* Fondo semitransparente para el overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Estilos del contenedor principal del popup con ancho fijo */
+.popup-content {
+  background-color: #121212;
+  border: 2px solid #BB86FC; 
+  border-radius: 8px;
+  padding: 20px;
+  width: 400px; /* Tamaño fijo del popup */
+  max-width: 400px; /* Aseguramos que no se redimensione */
+  min-height: 300px; /* Altura mínima para asegurar espacio cuando solo hay un campo */
+  position: relative;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* Botón de cancelación en la esquina superior derecha */
+.button-cancel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  color: rgb(167, 167, 167);
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+/* Contenedor de botones de edición alineado a la izquierda */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 15px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+/* Botones individuales sin fondo, solo icono */
+.button-cost, .button-stock, .button-full {
+  background-color: transparent;
+  color: #ffffff;
+  border: none;
+  font-size: 1.8em;
+  cursor: pointer;
+}
+
+.button-save {
+  background-color: #BB86FC;
+  color: #fff;
+  padding: 10px 20px; /* Ajustar el padding para que sea más amplio que el texto */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: auto; /* Ancho automático según el contenido */
+}
+
+/* Sección de entrada centrada y desplazada hacia la derecha */
+.input-section {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 50px; /* Mueve los campos a la derecha para evitar solapamiento */
+}
+
+.input-section label {
+  display: block;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.input-section input {
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  text-align: center;
+}

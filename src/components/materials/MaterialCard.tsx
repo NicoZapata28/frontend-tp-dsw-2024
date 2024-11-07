@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import { IMaterial } from '../../services/materials.ts';
-import { getCategoryIcon } from '../../utils/getCategoryIcon.ts';
+import { IMaterial } from '../../services/materials';
+import { getCategoryIcon } from '../../utils/getCategoryIcon';
+import EditMaterialPopup from '../materials/EditMaterialPopup.tsx';
 
 interface MaterialCardProps {
   material: IMaterial;
-  onEdit: () => void;
   onDelete: () => void;
-  showCosts: () => void;
+  onUpdate: () => void; 
 }
 
-const MaterialCard: React.FC<MaterialCardProps> = ({ material, onEdit, onDelete, showCosts }) => {
+const MaterialCard: React.FC<MaterialCardProps> = ({ material, onDelete, onUpdate }) => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   const imageSrc = typeof material.image === 'string' 
     ? material.image 
     : material.image 
       ? URL.createObjectURL(material.image) 
-      : 'defaultImage.png';    
+      : 'defaultImage.png';
 
   return (
     <div style={styles.card}>
@@ -33,22 +43,28 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ material, onEdit, onDelete,
         <p style={styles.description}>{material.description}</p>
         <div style={styles.costContainer}>
           <p style={styles.cost}>${material.cost.toLocaleString()}</p>
-          <button style={styles.costsButton} onClick={showCosts}>Ver costos</button>
         </div>
         <p style={styles.stock}>Stock: {material.stock}</p>
       </div>
       <div style={styles.actions}>
-        <button style={{ ...styles.button, backgroundColor: '#a3d977' }} onClick={onEdit}>
+        <button style={{ ...styles.button, backgroundColor: '#a3d977' }} onClick={handleOpenPopup}>
           <FaEdit />
         </button>
         <button style={{ ...styles.button, backgroundColor: '#ed6d6d' }} onClick={onDelete}>
           <FaTrashAlt />
         </button>
       </div>
+      
+      {isPopupOpen && (
+        <EditMaterialPopup 
+          materialId={material.id} 
+          onClose={handleClosePopup} 
+          onUpdate={onUpdate} 
+        />
+      )}
     </div>
   );
 };
-
 const styles = {
   card: {
     display: 'flex',
@@ -65,8 +81,8 @@ const styles = {
     width: '20px',
     height: '20px',
     marginLeft: '6px',
-    position: 'relative', // Ajustamos la posición
-    top: '-2px', // Movemos el icono ligeramente hacia arriba
+    position: 'relative',
+    top: '-2px', 
   },
   image: {
     width: '50px',
