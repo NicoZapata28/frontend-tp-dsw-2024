@@ -7,7 +7,6 @@ import AddMaterialForm from './AddMaterialForm.tsx'
 import Grid from "../Grid"
 import MaterialCard from "../materials/MaterialCard"
 import handleDelete from '../../utils/handleDelete.tsx'
-import handleUpdate from '../../utils/handleUpdate.tsx'
 import './MaterialsPage.css'
 
 const MaterialsPage: React.FC = () =>{
@@ -70,7 +69,6 @@ const MaterialsPage: React.FC = () =>{
           <MaterialCard
             material={data}
             onDelete={() => handleDelete(data.id)}
-            onUpdate={() => handleUpdate(data.id, data)}
           />
         )}
       />
