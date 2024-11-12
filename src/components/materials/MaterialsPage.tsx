@@ -4,6 +4,10 @@ import materialsService from '../../services/materials.ts'
 import materialCostsService from '../../services/materialCosts.ts'
 import AddButton from '../shared/AddButton.tsx'
 import AddMaterialForm from './AddMaterialForm.tsx'
+import Grid from "../Grid"
+import MaterialCard from "../materials/MaterialCard"
+import handleDelete from '../../utils/handleDelete.tsx'
+import handleUpdate from '../../utils/handleUpdate.tsx'
 import './MaterialsPage.css'
 
 const MaterialsPage: React.FC = () =>{
@@ -12,7 +16,7 @@ const MaterialsPage: React.FC = () =>{
 
   useEffect(() => {
     materialsService.getAll().then((data) => {
-      setMaterials(data)
+      setMaterials(data);
     })
   }, [])
 
@@ -60,6 +64,16 @@ const MaterialsPage: React.FC = () =>{
       {showForm && (
           <AddMaterialForm createMaterial={handleCreateMaterial} onClose={togglePopup}/>
       )}
+      <Grid
+        items={materials}
+        CardComponent={({ data }) => (
+          <MaterialCard
+            material={data}
+            onDelete={() => handleDelete(data.id)}
+            onUpdate={() => handleUpdate(data.id, data)}
+          />
+        )}
+      />
     </div>
   )
 }
