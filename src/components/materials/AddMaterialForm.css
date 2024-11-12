@@ -59,6 +59,25 @@
   color: #BB86FC;
 }
 
+.popup-container select {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #BB86FC;
+  border-radius: 20px;
+  background-color: #000000;
+  color: #BB86FC;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+.popup-container select:focus {
+  outline: none;
+  box-shadow: 0 0 5px #BB86FC;
+}
+
 .add-button {
   width: 45%;
   padding: 10px;

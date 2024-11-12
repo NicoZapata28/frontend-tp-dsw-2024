@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const baseUrl = 'http://localhost:3006/api/materialCosts';
+const baseUrl = 'http://localhost:3006/api/materialCosts'
 
 interface ICostHistory {
-    id: string,
+    id?: string,
     updateDate: Date,
     cost: number,  
 }
@@ -11,7 +11,7 @@ interface ICostHistory {
 export interface IMaterialCosts {
   idMaterial: string,
   costHistory: ICostHistory[],
-  id: number,
+  id?: number,
 }
 
 
@@ -24,8 +24,8 @@ interface IDeleteResponse {
 }
 
 const getById =  async (id: string) => {
-    const response = await axios.get(`${baseUrl}/${id}`);
-    return response.data;
+    const response = await axios.get(`${baseUrl}/${id}`)
+    return response.data
 }
 
 const getAll = async (): Promise<IMaterialCosts[]> => {
@@ -45,7 +45,7 @@ const update = async (id: string, newObject: IMaterialCosts): Promise<IMaterialC
 }
 
 const remove = async (id: string): Promise<IDeleteResponse> => {
-  const response = await axios.delete<IDeleteResponse>(`${baseUrl}/${id}`);
+  const response = await axios.delete<IDeleteResponse>(`${baseUrl}/${id}`)
   return response.data
 }
 

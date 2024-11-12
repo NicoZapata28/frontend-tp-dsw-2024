@@ -1,6 +1,7 @@
 import React,  { useState, useEffect } from 'react'
 import { IMaterial } from '../../services/materials.ts'
 import materialsService from '../../services/materials.ts'
+import materialCostsService from '../../services/materialCosts.ts'
 import AddButton from '../shared/AddButton.tsx'
 import AddMaterialForm from './AddMaterialForm.tsx'
 import './MaterialsPage.css'
@@ -15,8 +16,35 @@ const MaterialsPage: React.FC = () =>{
     })
   }, [])
 
-  const handleCreateMaterial = (data: FormData) => {
-    return materialsService.create(data)
+  const handleCreateMaterial = async (data: FormData): Promise<IMaterial> => {
+    try {
+      const newMaterial = await materialsService.create(data)
+      
+      if (!newMaterial.id) {
+        throw new Error('idMaterial not exists.')
+      }
+  
+      setMaterials((prevMaterials) => [...prevMaterials, newMaterial])
+  
+      const costHistoryEntry = {
+        updateDate: new Date(),
+        cost: newMaterial.cost,
+      }
+  
+      await materialCostsService.create({
+        idMaterial: newMaterial.id,
+        costHistory: [costHistoryEntry],
+      })
+  
+      console.log('Cost history added for material:', newMaterial.id)
+
+      togglePopup()
+  
+      return newMaterial
+    } catch (error) {
+      console.error('Error creating material or cost history:', error)
+      throw error
+    }
   }
 
   const togglePopup = () =>{

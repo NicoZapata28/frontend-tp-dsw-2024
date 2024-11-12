@@ -4,7 +4,7 @@ import './AddMaterialForm.css'
 
 interface AddMaterialProps {
   createMaterial: (data: FormData) => Promise<IMaterial>
-  onClose: () => void
+  onClose: (newMaterial?: IMaterial) => void
 }
 
 const AddMaterialForm: React.FC<AddMaterialProps> = ({ createMaterial, onClose }) => {
@@ -18,8 +18,8 @@ const AddMaterialForm: React.FC<AddMaterialProps> = ({ createMaterial, onClose }
     image: null as File | null,
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, files } = e.target as HTMLInputElement & HTMLSelectElement
     if (name === 'image' && files) {
       setFormData({ ...formData, image: files[0] })
     } else {
@@ -37,9 +37,10 @@ const AddMaterialForm: React.FC<AddMaterialProps> = ({ createMaterial, onClose }
     })
 
     try {
-      const response = await createMaterial(formDataToSend)
-      console.log('Product added:', response)
+      const newMaterial = await createMaterial(formDataToSend)
+      console.log('Product added:', newMaterial)
       alert('Product added!')
+      onClose(newMaterial)
       setFormData({
         name: '',
         description: '',
@@ -49,7 +50,6 @@ const AddMaterialForm: React.FC<AddMaterialProps> = ({ createMaterial, onClose }
         cost: 0,
         image: null,
       })
-      onClose()
     } catch (error) {
       console.error('Error adding product:', error)
     }
@@ -58,13 +58,18 @@ const AddMaterialForm: React.FC<AddMaterialProps> = ({ createMaterial, onClose }
   return (
     <div className='popup-background'>
       <div className='popup-container'>
-        <button className='close-button' onClick={onClose}>&times;</button>
+        <button className='close-button' onClick={() => onClose()}>&times;</button>
         <h2>Agregar un material</h2>
         <form onSubmit={handleSubmit}>
           <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Nombre del material" />
           <input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="Descripcion" />
           <input type="text" name="brand" value={formData.brand} onChange={handleChange} placeholder="Marca" />
-          <input type="text" name="category" value={formData.category} onChange={handleChange} placeholder="Categoria" />
+          <select name="category" value={formData.category} onChange={handleChange}>
+            <option value="">Seleccione una categoría</option>
+            <option value="Audio">Audio</option>
+            <option value="Periféricos">Periféricos</option>
+            <option value="Tablets">Tablets</option>
+          </select>
           <input type="number" name="stock" value={formData.stock.toString()} onChange={handleChange} placeholder="Stock" />
           <input type="number" name="cost" value={formData.cost.toString()} onChange={handleChange} placeholder="Costo" />
           <input type="file" name="image" onChange={handleChange} />
