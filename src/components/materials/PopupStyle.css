@@ -12,18 +12,52 @@
   z-index: 1000;
 }
 
+.header-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.material-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+}
+
+.material-info {
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+}
+
+.material-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.material-brand {
+  font-size: 0.9em;
+  color: #bbb;
+  margin: 0;
+}
+
 /* Estilos del contenedor principal del popup con ancho fijo */
 .popup-content {
   background-color: #121212;
-  border: 2px solid #BB86FC; 
+  border: 2px solid #BB86FC;
   border-radius: 8px;
   padding: 20px;
-  width: 400px; /* Tamaño fijo del popup */
-  max-width: 400px; /* Aseguramos que no se redimensione */
-  min-height: 300px; /* Altura mínima para asegurar espacio cuando solo hay un campo */
+  width: 95%;
+  max-width: 400px;
+  min-height: 300px;
   position: relative;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Asegura que los elementos estén espaciados verticalmente */
 }
 
 /* Botón de cancelación en la esquina superior derecha */
@@ -44,6 +78,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+  margin-top: 65px;
   margin-bottom: 15px;
   position: absolute;
   top: 20px;
@@ -60,31 +95,31 @@
 }
 
 .button-save {
+  align-self: center; /* Centra el botón horizontalmente */
   background-color: #BB86FC;
   color: #fff;
-  padding: 10px 20px; /* Ajustar el padding para que sea más amplio que el texto */
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 20px;
-  width: auto; /* Ancho automático según el contenido */
 }
 
 /* Sección de entrada centrada y desplazada hacia la derecha */
 .input-section {
-  margin-top: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 50px; /* Mueve los campos a la derecha para evitar solapamiento */
+  padding-left: 50px;
 }
 
 .input-section label {
-  display: block;
   font-weight: bold;
   color: #fff;
   margin-bottom: 5px;
-  text-align: center;
+  text-align: left;
+  width: 80%;
+  padding-left: 5px; /* Mueve el texto ligeramente a la izquierda */
 }
 
 .input-section input {
