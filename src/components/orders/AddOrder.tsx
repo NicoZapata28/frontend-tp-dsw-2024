@@ -15,6 +15,7 @@ const initialOrder: IOrder = {
   details: [{ idProduct: '', quantity: 0, price: 0 }],
 }
 
+
 const AddOrder = () =>{
   const [order, setOrder] = useState<IOrder>(initialOrder)
   const [customers, setCustomers] = useState<ICustomer[]>([])
@@ -24,7 +25,7 @@ const AddOrder = () =>{
   const [filteredMaterials, setFilteredMaterials] = useState<IMaterial[]>([])
   const [searchMaterialQuery, setSearchMaterialQuery] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
-  const [paymentMethod, setPaymentMethod] = useState<string>('') // "C" for cash, "I" for installments
+  const [paymentMethod, setPaymentMethod] = useState<string>('') 
   const [numberOfInstallments, setNumberOfInstallments] = useState<number>(1)
   const [installmentDetails, setInstallmentDetails] = useState<IInstallmentsDetails[]>([])
 
