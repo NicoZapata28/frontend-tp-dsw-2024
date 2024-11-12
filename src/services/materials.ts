@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const baseUrl = 'http://localhost:3006/api/materials';
+const baseUrl = 'http://localhost:3006/api/materials'
 
 export interface IMaterial {
-  id: string
+  id?: string
   image?: string | Blob
   name: string
   description: string
@@ -22,7 +22,7 @@ interface IDeleteResponse {
 }
 
 const getById =  async (id: string) => {
-    const response = await axios.get(`${baseUrl}/${id}`);
+    const response = await axios.get(`${baseUrl}/${id}`)
     return response.data;
   }
 
@@ -53,7 +53,7 @@ const update = async (id: string, newObject: IMaterial): Promise<IMaterial> => {
 }
 
 const remove = async (id: string): Promise<IDeleteResponse> => {
-  const response = await axios.delete<IDeleteResponse>(`${baseUrl}/${id}`);
+  const response = await axios.delete<IDeleteResponse>(`${baseUrl}/${id}`)
   return response.data
 }
 
