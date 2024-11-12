@@ -1,18 +1,10 @@
-.orders-page{
+.orders-page {
   background-color: #121212;
-  color: #ffffff;
-  padding: 20px;
-  min-height: 100vh;
+  color: #FFFFFF;
 }
 
-@media (min-width: 768px) and (max-width: 1024px){
-  .orders-page{
-    padding: 40px;
-  }
-}
-
-@media (min-width: 1025px){
-  .orders-page{
-    padding: 60px;
-  }
+.order-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
