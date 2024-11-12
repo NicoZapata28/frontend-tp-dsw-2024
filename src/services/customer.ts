@@ -2,7 +2,7 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3006/api/customers'
 
 export interface ICustomer{
-    id: string,
+    id?: string,
     dni: string,
     name: string,
     address: string,
