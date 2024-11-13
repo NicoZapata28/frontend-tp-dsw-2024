@@ -1,0 +1,75 @@
+.card-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 300px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #1f1f1f;
+    color: white;
+    border: 2px solid #a07fdd;
+    position: relative;
+}
+
+.customer-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.customer-info {
+    margin-bottom: 15px;
+}
+
+.customer-info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.icon-style {
+    margin-right: 8px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+}
+
+.customer-text {
+    line-height: 1.2;
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%); 
+}
+
+.action-button {
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: opacity 0.3s;
+}
+
+.action-button:hover {
+    opacity: 0.85;
+}
+
+.action-button-edit {
+    background-color: #b3cc50;
+}
+
+.action-button-delete {
+    background-color: #e87070;
+}
