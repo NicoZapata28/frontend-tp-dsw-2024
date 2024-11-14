@@ -4,6 +4,12 @@ import { ICustomer } from '../../services/customer'
 import AddCustomerForm from './AddCustomerForm.tsx'
 import AddButton from '../shared/AddButton.tsx'
 import './CustomersPage.css'
+import Grid from '../Grid.tsx'
+import FilterBy from '../shared/FilterBy.tsx'
+import SearchBar from '../shared/SearchBar.tsx'
+import CustomerCard from './CustomerCard.tsx'
+import handleCustomerUpdate from '../../utils/HandleCustomerUpdate.tsx'
+import handleCustomerDelete from '../../utils/HandleCustomerDelete.tsx'
 
 const CustomersPage: React.FC = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([])
@@ -38,11 +44,28 @@ const CustomersPage: React.FC = () => {
   console.log(customers)
   return (
     <div className='customers-page'>
-      <h1>Clientes</h1>
-      <AddButton onClick={togglePopup} />
+      <header className='header'>
+        <h1>Clientes</h1>
+        <AddButton onClick={togglePopup} />
+      </header>
       {showForm && (
         <AddCustomerForm createCustomer={handleCreateCustomer} onClose={togglePopup} />
       )}
+
+      <div className='filter-search'>
+        <FilterBy onFilter={()=>console.log('in progress...')}/>
+        <SearchBar onSearch={()=>console.log('in progress...')}/>
+      </div>
+      <Grid
+        items={customers}
+        CardComponent={({ data }) => (
+          <CustomerCard
+            customer={data}
+            onEdit={() => handleCustomerUpdate}
+            onDelete={() => handleCustomerDelete }
+          />
+        )}
+      />
     </div>
   )
 }

@@ -1,0 +1,118 @@
+.card-order {
+  display: flex;
+  justify-content: flex-start;
+  background-color: #000000;
+  border-radius: 20px;
+  color: #FFFFFF;
+  border: 1px solid #BB86FF;
+  width: 100%;
+  z-index: 1;
+}
+
+.card-container{
+  position: relative;
+  width: 85%;
+}
+
+@media (min-width: 600px){
+  .card-container{
+    width: 60%;
+  }
+}
+
+.button-detail {
+  background-color: #BB86FF;
+  border: none;
+  color: #000000;
+  position: absolute;
+  right: 15px;
+  border-radius: 20px;
+  bottom:15px;
+}
+
+.details-order {
+  background-color: #BB86FF;
+  color: #000000;
+  position: relative;
+  width: 90%;
+  padding: 30px 0px 10px 10px;
+  border-radius: 5px;
+  transform: translateY(-30px);
+  width: 100%;
+  text-align: center;
+  z-index: 0;
+}
+
+.button{
+  right: 15px;
+  position: absolute;
+  border-radius: 50%;
+  color: #FFFFFF;
+  height: 35px;
+  width: 35px;
+  padding: 2px;
+  border: none;
+  cursor: pointer;
+}
+
+.button-delete{
+  background-color: #ed6d6d;
+  top: 60px;
+}
+
+.button-edit{
+  background-color: #a3d977;
+  top: 10px;
+}
+
+.name-customer{
+  margin-bottom: 20px;
+  font-size: 30px;
+  margin-left: 5px;
+}
+
+.info-order{
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.paid-status {
+  margin-left: 15px;
+  border-radius: 10px;
+  background-color: rgb(110, 110, 110) ;
+  color: #000000;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.pay-button {
+  background-color: #0d9e00;
+  color: #000000;
+  border-radius: 10px;
+  border: none;
+  border-radius: 5px;
+  margin: 5px 20px;
+  cursor: pointer;
+  align-self: center;
+}
+
+.icon-dollar{
+  position: relative;
+  right: 5px;
+  bottom: 3px;
+  height: 30px;
+  width: 30px;
+}
+
+.icon-calendar{
+  position: relative;
+  bottom: 3px;
+  height: 30px;
+  width: 30px;
+  right: 5px;
+}
+
+.icon-person{
+  position: relative;
+  bottom: 4px;
+}

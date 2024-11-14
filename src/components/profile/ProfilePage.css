@@ -1,0 +1,18 @@
+.employee-page {
+  background-color: #121212;
+  color: #FFFFFF;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) and (max-width: 1024px){
+  .employee-page{
+    padding: 40px;
+  }
+}
+
+@media (min-width: 1025px){
+  .employee-page{
+    padding: 60px;
+  }
+}

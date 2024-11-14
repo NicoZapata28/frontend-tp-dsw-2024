@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 import { IMaterial } from '../../services/materials'
 import { getCategoryIcon } from '../../utils/getCategoryIcon'
-import EditMaterialPopup from '../materials/EditMaterialPopup.tsx'
+import EditMaterialPopup from '../materials/EditMaterialPopup'
 
 interface MaterialCardProps {
   material: IMaterial
@@ -155,4 +155,4 @@ const styles = {
   },
 } as const;
 
-export default MaterialCard;
+export default MaterialCard

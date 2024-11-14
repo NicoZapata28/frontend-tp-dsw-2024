@@ -1,10 +1,10 @@
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import styles from '../styles/operationCards.module.css';
-import { Link } from 'react-router-dom';
-import Icon1 from '../img/materials-icon.svg';
+import { Container, Row, Col, Card } from 'react-bootstrap'
+import styles from '../styles/operationCards.module.css'
+import { Link } from 'react-router-dom'
+import Icon1 from '../img/materials-icon.svg'
 import Icon2 from '../img/orders-icon.svg';
-import Icon3 from '../img/customers-icon.svg';
-import Icon4 from '../img/balance-icon.svg';
+import Icon3 from '../img/customers-icon.svg'
+import Icon4 from '../img/balance-icon.svg'
 
 const operations = [
   { path: '/Materials', icon: Icon1, label: 'Materials' },
@@ -34,4 +34,4 @@ const OperationCards = () => {
   );
 };
 
-export default OperationCards;
+export default OperationCards

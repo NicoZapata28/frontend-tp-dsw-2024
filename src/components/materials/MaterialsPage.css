@@ -5,6 +5,23 @@
   min-height: 100vh;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.filter-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
 @media (min-width: 768px) and (max-width: 1024px){
   .materials-page{
     padding: 40px;

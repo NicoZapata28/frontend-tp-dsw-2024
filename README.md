@@ -31,6 +31,7 @@ Este proyecto es una aplicación frontend para el trabajo práctico de la asigna
 - `react`: ^18.3.1
 - `react-bootstrap`: ^2.10.4
 - `react-dom`: ^18.3.1
+- `react-icons`: ^5.3.0
 - `react-router-dom`: ^6.26.1
 
 ### Desarrollo
@@ -53,4 +54,9 @@ Este proyecto es una aplicación frontend para el trabajo práctico de la asigna
 2. Ejecuta el siguiente comando para instalar las dependencias:
 
    ```bash
-   npm install
+   pnpm install
+   
+3. Para correr el proyecto en modo 'dev', se debe ejecutar el comando:
+
+   ```bash
+   pnpm run dev

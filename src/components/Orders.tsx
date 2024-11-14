@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import React from "react";
-import ordersService from "../services/orders.ts";
-import employeeService from "../services/employee.ts";
-import customerService from "../services/customer.ts";
-import materialService from "../services/materials.ts";
-import paymentsService from "../services/payments.ts";
-import { IOrder } from "../services/orders.ts";
-import { ICustomer } from "../services/customer.ts";
-import { IEmployee } from "../services/employee.ts";
-import { IMaterial } from "../services/materials.ts";
-import { IPayment } from "../services/payments.ts";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
+import { useState, useEffect } from "react"
+import React from "react"
+import ordersService from "../services/orders.ts"
+import employeeService from "../services/employee.ts"
+import customerService from "../services/customer.ts"
+import materialService from "../services/materials.ts"
+import paymentsService from "../services/payments.ts"
+import { IOrder } from "../services/orders.ts"
+import { ICustomer } from "../services/customer.ts"
+import { IEmployee } from "../services/employee.ts"
+import { IMaterial } from "../services/materials.ts"
+import { IPayment } from "../services/payments.ts"
+import Table from "react-bootstrap/Table"
+import Button from "react-bootstrap/Button"
 
 const Orders = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
