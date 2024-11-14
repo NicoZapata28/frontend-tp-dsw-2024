@@ -5,27 +5,26 @@ import { getCategoryIcon } from '../../utils/getCategoryIcon'
 import EditMaterialPopup from '../materials/EditMaterialPopup'
 
 interface MaterialCardProps {
-  material: IMaterial;
-  onDelete: () => void;
-  onUpdate: () => void; 
+  material: IMaterial
+  onDelete: () => void
 }
 
-const MaterialCard: React.FC<MaterialCardProps> = ({ material, onDelete, onUpdate }) => {
+const MaterialCard: React.FC<MaterialCardProps> = ({ material, onDelete }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleOpenPopup = () => {
-    setIsPopupOpen(true);
-  };
+    setIsPopupOpen(true)
+  }
 
   const handleClosePopup = () => {
-    setIsPopupOpen(false);
-  };
+    setIsPopupOpen(false)
+  }
 
   const imageSrc = typeof material.image === 'string' 
     ? material.image 
     : material.image 
       ? URL.createObjectURL(material.image) 
-      : 'defaultImage.png';
+      : 'defaultImage.png'
 
   return (
     <div style={styles.card}>
@@ -59,12 +58,12 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ material, onDelete, onUpdat
         <EditMaterialPopup 
           materialId={material.id} 
           onClose={handleClosePopup} 
-          onUpdate={onUpdate} 
         />
       )}
     </div>
-  );
-};
+  )
+}
+
 const styles = {
   card: {
     display: 'flex',
@@ -156,4 +155,4 @@ const styles = {
   },
 } as const;
 
-export default MaterialCard;
+export default MaterialCard
