@@ -2,3 +2,10 @@
   background-color: #121212;
   color: #FFFFFF;
 }
+
+.order-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}

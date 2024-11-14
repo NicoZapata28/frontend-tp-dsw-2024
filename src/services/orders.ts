@@ -45,5 +45,6 @@ const remove = async (id: string): Promise<IDeleteResponse> =>{
   return response.data
 }
 
+
 export default {getAll, create, update, remove}
 
