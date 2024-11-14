@@ -10,47 +10,47 @@ import "./OrderCard.css"
 
 
 interface OrderCardProps {
-  order: IOrder;
-  customers: ICustomer[];
-  materials: IMaterial[];
-  payments: IPayment[];
-  onDelete: (orderId: string) => void;
+  order: IOrder
+  customers: ICustomer[]
+  materials: IMaterial[]
+  payments: IPayment[]
+  onDelete: (orderId: string) => void
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, customers, materials, payments, onDelete }) => {
-  const [expanded, setExpanded] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [expanded, setExpanded] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
 
   const getCustomerName = (id: string) => {
-    const customer = customers.find(c => c.id === id);
-    return customer ? customer.name : "Desconocido";
+    const customer = customers.find(c => c.id === id)
+    return customer ? customer.name : "Desconocido"
   };
 
   const getMaterialName = (idProduct: string) => {
-    const material = materials.find(m => m.id === idProduct);
-    return material ? material.name : "Desconocido";
-  };
+    const material = materials.find(m => m.id === idProduct)
+    return material ? material.name : "Desconocido"
+  }
 
   const getPaymentDetails = () => {
-    const payment = payments.find(p => p.idOrder === order.id);
+    const payment = payments.find(p => p.idOrder === order.id)
     if (payment) {
-      const unpaidInstallments = payment.installmentsDetails.filter(installment => installment.paid === "N");
+      const unpaidInstallments = payment.installmentsDetails.filter(installment => installment.paid === "N")
       return { unpaidCount: unpaidInstallments.length, totalCount: payment.numberOfInstallments || 0, details: payment.installmentsDetails };
     }
-    return { unpaidCount: 0, totalCount: 0, details: [] };
-  };
+    return { unpaidCount: 0, totalCount: 0, details: [] }
+  }
 
-  const formatDate = (date: Date) => new Intl.DateTimeFormat('es-ES').format(date);
+  const formatDate = (date: Date) => new Intl.DateTimeFormat('es-ES').format(date)
 
-  const toggleDetails = () => setExpanded(!expanded);
-  const toggleEdit = () => setIsEditing(!isEditing);
+  const toggleDetails = () => setExpanded(!expanded)
+  const toggleEdit = () => setIsEditing(!isEditing)
 
-  const { unpaidCount, totalCount, details } = getPaymentDetails();
+  const { unpaidCount, totalCount, details } = getPaymentDetails()
 
   const handleSave = () => {
-    setIsEditing(false);
-  };
+    setIsEditing(false)
+  }
 
   if (isEditing) {
     return (
@@ -111,7 +111,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, customers, materials, paym
         )}
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
 export default OrderCard

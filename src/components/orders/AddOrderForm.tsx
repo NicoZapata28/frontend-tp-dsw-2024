@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react"
-import ordersService, {IOrder} from '../../services/orders'
-import customersService, {ICustomer} from '../../services/customer.ts'
-import materialsService, {IMaterial} from '../../services/materials.ts'
+import React, { useState, useEffect } from 'react'
+import ordersService, {IOrder} from '../../services/orders.ts'
 import paymentService, {IPayment, IInstallmentsDetails} from '../../services/payments.ts'
 import {jwtDecode} from 'jwt-decode'
+import materialsService, { IMaterial } from '../../services/materials.ts'
+import { ICustomer } from '../../services/customer.ts'
+import './AddOrderForm.css'
+
+interface AddOrderProps {
+  onClose: () => void,
+  materialsList: IMaterial[],
+  customersList: ICustomer[]
+}
 
 const initialOrder: IOrder = {
   id:'',
@@ -15,62 +22,36 @@ const initialOrder: IOrder = {
   details: [{ idProduct: '', quantity: 0, price: 0 }],
 }
 
+interface DecodedToken {
+  id: string
+  cuil: string
+  name: string
+  exp: number
+}
 
-const AddOrder = () =>{
-  const [order, setOrder] = useState<IOrder>(initialOrder)
-  const [customers, setCustomers] = useState<ICustomer[]>([])
+const AddOrder: React.FC<AddOrderProps> = ({ onClose, materialsList, customersList }) => {
+  const [order, setOrder] = useState<IOrder> (initialOrder)
   const [filteredCustomers, setFilteredCustomers] = useState<ICustomer[]>([])
   const [searchQueryCustomers, setSearchQueryCustomers] = useState<string>('')
-  const [materials, setMaterials] = useState<IMaterial[]>([])
   const [filteredMaterials, setFilteredMaterials] = useState<IMaterial[]>([])
   const [searchMaterialQuery, setSearchMaterialQuery] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(true)
-  const [paymentMethod, setPaymentMethod] = useState<string>('') 
+  const [paymentMethod, setPaymentMethod] = useState<string>('') // C for cash, I for installments
   const [numberOfInstallments, setNumberOfInstallments] = useState<number>(1)
   const [installmentDetails, setInstallmentDetails] = useState<IInstallmentsDetails[]>([])
 
-
   useEffect(() => {
-      const fetchCustomersAndMaterials = async () => {
-        try {
-          const customerList = await customersService.getAll()
-          setCustomers(customerList)
-          setFilteredCustomers(customerList)
-  
-          const materialList = await materialsService.getAll()
-          setMaterials(materialList)
-          setFilteredMaterials(materialList)
-  
-          setLoading(false)
-        } catch (error) {
-          console.error('Error fetching data:', error)
-          setLoading(false)
-        }
-      }
-  
-      fetchCustomersAndMaterials()
-    }, [])
-
-  useEffect(() => {
-    const results = customers.filter(customer =>
+    const results = customersList.filter(customer =>
       customer.dni.toLowerCase().includes(searchQueryCustomers.toLowerCase())
     )
     setFilteredCustomers(results)
-  }, [searchQueryCustomers, customers])
+  }, [searchQueryCustomers, customersList])
 
   useEffect(() => {
-    const results = materials.filter(material =>
+    const results = materialsList.filter(material =>
       material.name.toLowerCase().includes(searchMaterialQuery.toLowerCase())
     )
     setFilteredMaterials(results)
-  }, [searchMaterialQuery, materials])
-
-  interface DecodedToken {
-    id: string
-    cuil: string
-    name: string
-    exp: number
-  }
+  }, [searchMaterialQuery, materialsList])
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -104,12 +85,12 @@ const AddOrder = () =>{
   }
 
   const handleMaterialChange = (index: number, e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedMaterial = materials.find(material => material.id === e.target.value)
+    const selectedMaterial = materialsList.find((material => material.id === e.target.value))
     if (selectedMaterial) {
       const updatedDetails = [...order.details];
       updatedDetails[index] = {
         ...updatedDetails[index],
-        idProduct: selectedMaterial.id,
+        idProduct: selectedMaterial.id!,
         quantity: 1, 
         price: selectedMaterial.cost
       }
@@ -123,14 +104,14 @@ const AddOrder = () =>{
     const newQuantity = parseInt(e.target.value, 10)
   
     if (!isNaN(newQuantity) && newQuantity > 0) {
-      const selectedMaterial = materials.find(material => material.id === updatedDetails[index].idProduct)
+      const selectedMaterial = materialsList.find(material => material.id === updatedDetails[index].idProduct)
   
       if (selectedMaterial) {
         updatedDetails[index] = {
           ...updatedDetails[index],
           quantity: newQuantity,
           price: selectedMaterial.cost * newQuantity,
-        }
+        };
   
         setOrder({ ...order, details: updatedDetails })
       }
@@ -158,18 +139,17 @@ const AddOrder = () =>{
   }
 
   const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const method = e.target.value;
-    setPaymentMethod(method);
+    const method = e.target.value
+    setPaymentMethod(method)
 
     if (method === 'I') {  // Si es en cuotas
-      const numInstallments = prompt("Ingrese el número de cuotas:");
-      const numberOfInstallments = numInstallments ? parseInt(numInstallments, 10) : 1;
-      setNumberOfInstallments(numberOfInstallments);
+      const numInstallments = prompt("Ingrese el número de cuotas:")
+      const numberOfInstallments = numInstallments ? parseInt(numInstallments, 10) : 1
+      setNumberOfInstallments(numberOfInstallments)
       
-      // Generar detalles de cuotas
-      const totalCost = order.totalCost;
-      const installmentAmount = totalCost / numberOfInstallments;
-      const installments: IInstallmentsDetails[] = [];
+      const totalCost = order.totalCost
+      const installmentAmount = totalCost / numberOfInstallments
+      const installments: IInstallmentsDetails[] = []
 
       for (let i = 0; i < numberOfInstallments; i++) {
         const paymentDate = new Date()
@@ -199,10 +179,10 @@ const AddOrder = () =>{
       const orderId = createdOrder.id
 
       for (const detail of currentOrder.details) {
-        const selectedMaterial = materials.find(material => material.id === detail.idProduct)
+        const selectedMaterial = materialsList.find(material => material.id === detail.idProduct)
         if (selectedMaterial) {
           const updatedStock = selectedMaterial.stock - detail.quantity
-          await materialsService.update( selectedMaterial.id, {
+          await materialsService.update( selectedMaterial.id!, {
             ...selectedMaterial,
             stock: updatedStock })
         }
@@ -238,118 +218,113 @@ const AddOrder = () =>{
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Employee ID</label>
-        <input
-          type="text"
-          name="idEmployee"
-          value={order.idEmployee}
-          readOnly
-        />
-      </div>
+    <div className="popup-background" onClick={onClose}>
+      <div className="popup-container" onClick={(e) => e.stopPropagation()}>
+        <button className="close-button" onClick={onClose}>&times;</button>
+        <h2>Create New Order</h2>
+        <form onSubmit={handleSubmit}>
+          <div>  
+            <input type="text" 
+            name='idEmployee'
+            value={order.idEmployee}
+            readOnly
+            />
+          </div>
 
-      <div>
-        <label>Customer</label>
-        <input
-          type="text"
-          placeholder="Search DNI"
-          value={searchQueryCustomers}
-          onChange={handleSearchCustomerChange}
-        />
-        {loading ? (
-          <p>Loading customers...</p>
-        ) : (
-          <select name="idCustomer" value={order.idCustomer} onChange={handleCustomerChange} required>
-            <option value="">Select a customer</option>
-            {filteredCustomers.map((customer) => (
+          <div>
+            <label>Customer</label>
+            <input
+              type="text"
+              placeholder="Search DNI"
+              value={searchQueryCustomers}
+              onChange={handleSearchCustomerChange}
+            />
+            <select name="idCustomer" value={order.idCustomer} onChange={handleCustomerChange} required>
+              <option value="">Select a customer</option>
+              {filteredCustomers.map((customer) => (
               <option key={customer.id} value={customer.id}>
                 {customer.dni} - {customer.name}
               </option>
-            ))}
-          </select>
-        )}
-      </div>
+              ))}
+            </select>
+          </div>
 
-      {order.details.map((detail, index) => (
-        <div key={index}>
-          <label>Product</label>
-          <input
-            type="text"
-            placeholder="Search product"
-            value={searchMaterialQuery}
-            onChange={handleSearchMaterialChange}
-          />
-          {loading ? (
-            <p>Loading products...</p>
-          ) : (
+          {order.details.map((detail, index) => (
+          <div className='product-field' key={index}>
+            <label>Product</label>
+            <input
+              type="text"
+              placeholder="Search product"
+              value={searchMaterialQuery}
+              onChange={handleSearchMaterialChange}
+            />
             <select value={detail.idProduct} onChange={(e) => handleMaterialChange(index, e)} required>
-              <option value="">Select a product</option>
-              {filteredMaterials.map((material) => (
+                <option value="">Select a product</option>
+                  {filteredMaterials.map((material) => (
                 <option key={material.id} value={material.id}>
                   {material.name} - {material.brand} - ${material.cost} - Stock: {material.stock}
                 </option>
-              ))}
+                  ))}
             </select>
-          )}
-          <label>Quantity</label>
-          <input
-            type="number"
-            name="quantity"
-            min="1"
-            value={detail.quantity}
-            onChange={(e) => handleQuantityChange(e, index)}
-            required
-          />
-          <label>Price</label>
-          <input
-            type="number"
-            name="price"
-            value={detail.price}
-            onChange={(e) => handleDetailChange(index, e)}
-            required
-          />
-          <button type="button" onClick={() => removeDetail(index)}>Remove</button>
-        </div>
-      ))}
 
-      <button type="button" onClick={addDetail}>Add Product</button>
-
-      <div>
-        <label>Total Cost</label>
-        <input
-          type="number"
-          name="totalCost"
-          value={order.totalCost}
-          readOnly
-          required
-        />
-      </div>
-      
-      <div>
-        <label>Método de pago</label>
-        <select value={paymentMethod} onChange={handlePaymentMethodChange}>
-          <option value="">Seleccionar método</option>
-          <option value="C">Efectivo</option>
-          <option value="I">Cuotas</option>
-        </select>
-      </div>
-
-      {paymentMethod === 'I' && (
-        <div>
-          <h4>Detalles de cuotas:</h4>
-          {installmentDetails.map((installment, index) => (
-            <div key={index}>
-              <p>Cuota {installment.installmentN}: ${installment.amount.toFixed(2)} - Fecha de pago: {new Date(installment.paymentDate).toLocaleDateString()}</p>
-            </div>
+            <label>Quantity</label>
+            <input
+              type="number"
+              name="quantity"
+              min="1"
+              value={detail.quantity}
+              onChange={(e) => handleQuantityChange(e, index)}
+              required
+            />
+            <label>Price</label>
+            <input
+              type="number"
+              name="price"
+              value={detail.price}
+              onChange={(e) => handleDetailChange(index, e)}
+              required
+            />
+            <button type="button" className='r-button' onClick={() => removeDetail(index)}>Remove</button>
+          </div>
           ))}
-        </div>
-      )}
-      
-      <button type="submit">Create Order</button>
-    </form>
-  )
-}
 
+          <button type="button" className='f-button' onClick={addDetail}>Add Product</button>
+
+          <div>
+            <label>Total Cost</label>
+            <input
+              type="number"
+              name="totalCost"
+              value={order.totalCost}
+              readOnly
+              required
+            />
+          </div>
+      
+          <div>
+            <label>Método de pago</label>
+            <select value={paymentMethod} onChange={handlePaymentMethodChange}>
+              <option value="">Seleccionar método</option>
+              <option value="C">Efectivo</option>
+              <option value="I">Cuotas</option>
+            </select>
+          </div>
+
+          {paymentMethod === 'I' && (
+            <div>
+              <h4>Detalles de cuotas:</h4>
+              {installmentDetails.map((installment, index) => (
+                <div key={index}>
+                  <p>Cuota {installment.installmentN}: ${installment.amount.toFixed(2)} - Fecha de pago: {new Date(installment.paymentDate).toLocaleDateString()}</p>
+                </div>
+              ))}
+            </div>
+          )}
+      
+          <button type="submit" className='f-button'>Create Order</button>
+        </form>
+      </div>
+    </div>
+)}
 
 export default AddOrder
