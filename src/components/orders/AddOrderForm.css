@@ -1,0 +1,102 @@
+.popup-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: auto;
+}
+
+.popup-container {
+  background-color: #000000;
+  color: #BB86FC;
+  padding: 20px;
+  border-radius: 8px;
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #BB86FC;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #9f66ea;
+}
+
+.popup-container h2 {
+  color: #BB86FC;
+  text-align: center;
+}
+
+.popup-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popup-container label {
+  align-self: flex-start;
+  color: #BB86FC;
+  margin: 10px 0 5px;
+}
+
+.popup-container select,
+.popup-container input,
+.popup-container textarea {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #BB86FC;
+  border-radius: 20px;
+  background-color: #000000;
+  color: #BB86FC;
+}
+
+.product-field{
+  margin-bottom: 10px;
+}
+
+.r-button{
+  width: 45%;
+  padding: 10px;
+  background-color: #B00020;
+  color: black;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.f-button {
+  width: 45%;
+  padding: 10px;
+  background-color: #BB86FC;
+  color: black;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.f-button:hover {
+  background-color: #9f66ea;
+}

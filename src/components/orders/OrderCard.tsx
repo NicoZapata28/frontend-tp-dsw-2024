@@ -14,30 +14,30 @@ import { HiCurrencyDollar } from "react-icons/hi2"
 import './OrderCard.css'
 
 interface OrderCardProps {
-  order: IOrder;
-  customers: ICustomer[];
-  materials: IMaterial[];
-  payments: IPayment[];
-  onDelete: (orderId: string) => void;
+  order: IOrder
+  customers: ICustomer[]
+  materials: IMaterial[]
+  payments: IPayment[]
+  onDelete: (orderId: string) => void
 }
 
 interface Installment {
   _id: string; 
-  installmentN: number;
-  amount: number;
-  paid: "Y" | "N"; 
-  paymentDate: string; 
+  installmentN: number
+  amount: number
+  paid: "Y" | "N"
+  paymentDate: string
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, customers, materials, payments, onDelete }) => {
-  const [expanded, setExpanded] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [installments, setInstallments] = useState<Installment[]>([]); 
+  const [expanded, setExpanded] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [installments, setInstallments] = useState<Installment[]>([]);
 
 const getPaymentDetails = useCallback(() => {
-  const payment = payments.find(p => p.idOrder === order.id);
+  const payment = payments.find(p => p.idOrder === order.id)
   if (payment) {
-    const unpaidInstallments = payment.installmentsDetails.filter(installment => installment.paid === "N");
+    const unpaidInstallments = payment.installmentsDetails.filter(installment => installment.paid === "N")
     return { 
       unpaidCount: unpaidInstallments.length, 
       totalCount: payment.numberOfInstallments || 0, 
@@ -48,40 +48,40 @@ const getPaymentDetails = useCallback(() => {
         paid: detail.paid,
         paymentDate: detail.paymentDate,
       })) 
-    };
+    }
   }
-  return { unpaidCount: 0, totalCount: 0, details: [] };
-}, [payments, order.id]);
+  return { unpaidCount: 0, totalCount: 0, details: [] }
+}, [payments, order.id])
 
 
   useEffect(() => {
-    const paymentDetails = getPaymentDetails().details;
-    setInstallments(paymentDetails); 
-  }, [payments, order.id, getPaymentDetails]);
+    const paymentDetails = getPaymentDetails().details
+    setInstallments(paymentDetails)
+  }, [payments, order.id, getPaymentDetails])
 
   const getCustomerName = (id: string) => {
-    const customer = customers.find(c => c.id === id);
-    return customer ? customer.name : "Desconocido";
-  };
+    const customer = customers.find(c => c.id === id)
+    return customer ? customer.name : "Desconocido"
+  }
 
   const getMaterialName = (idProduct: string) => {
-    const material = materials.find(m => m.id === idProduct);
-    return material ? material.name : "Desconocido";
-  };
+    const material = materials.find(m => m.id === idProduct)
+    return material ? material.name : "Desconocido"
+  }
 
-  const formatDate = (date: Date) => new Intl.DateTimeFormat('es-ES').format(date);
+  const formatDate = (date: Date) => new Intl.DateTimeFormat('es-ES').format(date)
 
-  const toggleDetails = () => setExpanded(!expanded);
+  const toggleDetails = () => setExpanded(!expanded)
   
-  const toggleEdit = () => setIsEditing(!isEditing);
+  const toggleEdit = () => setIsEditing(!isEditing)
 
   const handleSave = () => {
-    setIsEditing(false);
-  };
+    setIsEditing(false)
+  }
 
 const handlePayment = async (installmentId: string | number) => {
   try {
-    await markInstallmentAsPaid(order.id.toString(), installmentId.toString());
+    await markInstallmentAsPaid(order.id.toString(), installmentId.toString())
 
     setInstallments(prevInstallments =>
       prevInstallments.map(installment =>
@@ -89,14 +89,14 @@ const handlePayment = async (installmentId: string | number) => {
           ? { ...installment, paid: "Y" }
           : installment
       )
-    );
+    )
   } catch (error) {
-    console.error('Error al marcar la cuota como pagada:', error);
-    alert('Hubo un error al intentar marcar la cuota como pagada. Intenta nuevamente más tarde.');
+    console.error('Error al marcar la cuota como pagada:', error)
+    alert('Hubo un error al intentar marcar la cuota como pagada. Intenta nuevamente más tarde.')
   }
-};
+}
 
-  const { unpaidCount, totalCount } = getPaymentDetails();
+  const { unpaidCount, totalCount } = getPaymentDetails()
 
   if (isEditing) {
     return (
@@ -105,7 +105,7 @@ const handlePayment = async (installmentId: string | number) => {
         onSave={handleSave}
         onCancel={() => setIsEditing(false)}
       />
-    );
+    )
   }
 
   return (
@@ -173,7 +173,7 @@ const handlePayment = async (installmentId: string | number) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default OrderCard;
+export default OrderCard
