@@ -68,11 +68,12 @@
 .name-customer{
   margin-bottom: 20px;
   font-size: 30px;
+  margin-left: 5px;
 }
 
 .info-order{
   font-size: 20px;
-  margin: auto;
+  margin-left: 10px;
 }
 
 .paid-status {
@@ -95,3 +96,23 @@
   align-self: center;
 }
 
+.icon-dollar{
+  position: relative;
+  right: 5px;
+  bottom: 3px;
+  height: 30px;
+  width: 30px;
+}
+
+.icon-calendar{
+  position: relative;
+  bottom: 3px;
+  height: 30px;
+  width: 30px;
+  right: 5px;
+}
+
+.icon-person{
+  position: relative;
+  bottom: 4px;
+}

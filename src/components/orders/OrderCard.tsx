@@ -8,6 +8,9 @@ import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import EditOrderForm from './EditOrder'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
+import { IoPerson } from "react-icons/io5"
+import { FaCalendarAlt } from "react-icons/fa"
+import { HiCurrencyDollar } from "react-icons/hi2"
 import './OrderCard.css'
 
 interface OrderCardProps {
@@ -109,10 +112,10 @@ const handlePayment = async (installmentId: string | number) => {
     <div className="card-container" style={{ position: 'relative', marginBottom: expanded ? '200px' : 'auto' }}>
       <Card className="card-order">
         <Card.Body>
-          <Card.Title className='name-customer'>{getCustomerName(order.idCustomer)}</Card.Title>
+          <Card.Title className='name-customer'> <IoPerson className='icon-person'/> {getCustomerName(order.idCustomer)}</Card.Title>
           <Card.Text>
-            <strong className='info-order'>{formatDate(new Date(order.orderDate))}</strong> <br /> <br />
-            <strong className='info-order'>${order.totalCost}</strong>
+            <strong className='info-order'> <FaCalendarAlt className='icon-calendar' /> {formatDate(new Date(order.orderDate))}</strong> <br /> <br />
+            <strong className='info-order'> <HiCurrencyDollar className='icon-dollar'/> ${order.totalCost}</strong>
           </Card.Text>
           <Button className='button-detail' onClick={toggleDetails}>
             {expanded ? "Ocultar detalles" : "Ver detalles"}
