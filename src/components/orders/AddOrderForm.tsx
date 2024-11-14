@@ -27,6 +27,7 @@ interface DecodedToken {
   cuil: string
   name: string
   exp: number
+  role: string
 }
 
 const AddOrder: React.FC<AddOrderProps> = ({ onClose, materialsList, customersList }) => {

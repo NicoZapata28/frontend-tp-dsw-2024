@@ -8,6 +8,7 @@ import MaterialsPage from "./components/materials/MaterialsPage.tsx"
 import OrdersPage from "./components/orders/OrdersPage.tsx"
 import CustomersPage from "./components/customers/CustomersPage.tsx"
 import Footer from "./components/Footer"
+import ProfilePage from "./components/profile/ProfilePage.tsx"
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/materials" element={<MaterialsPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/customers" element={<CustomersPage />} />
+          <Route path="/profile" element={<ProfilePage />}/>
         </Routes>
         <Footer />
       </Router>

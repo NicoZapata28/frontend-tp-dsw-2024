@@ -1,25 +1,18 @@
-.orders-page {
+.employee-page {
   background-color: #121212;
   color: #FFFFFF;
   padding: 20px;
   min-height: 100vh;
 }
 
-.order-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-}
-
 @media (min-width: 768px) and (max-width: 1024px){
-  .orders-page{
+  .employee-page{
     padding: 40px;
   }
 }
 
 @media (min-width: 1025px){
-  .orders-page{
+  .employee-page{
     padding: 60px;
   }
 }

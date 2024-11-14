@@ -34,8 +34,8 @@ const Navigation:React.FC<NavigationProps> = ({onLogout, employeeName}) =>{
             <Nav.Link href="/Customers">Customers</Nav.Link>
             <Nav.Link href="/Orders">Orders</Nav.Link>
             <NavDropdown title={employeeName} id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">My profile</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Balance</NavDropdown.Item>
+              <NavDropdown.Item href="/Profile">My profile</NavDropdown.Item>
+              <NavDropdown.Item href="/Profile">Balance</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={onLogout}>Close session</NavDropdown.Item>
             </NavDropdown>
