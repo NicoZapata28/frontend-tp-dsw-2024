@@ -11,16 +11,19 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #1f0037, #270049);
+  /* background: linear-gradient(135deg, #1c0131, #5818a0); */
+  background: #380d4d;
   border-radius: 10px;
   max-width: 320px;
   width: 100%;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(187, 134, 252, 0.3);
 }
 
 .logo {
   width: 50%;
   margin-bottom: 15px;
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%); 
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
 }
 
 .title {
@@ -33,6 +36,7 @@
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
+  box-sizing: border-box;
   border-radius: 20px;
   border: 1px solid #BB86FC;
   background-color: #121212;
@@ -42,8 +46,10 @@
   outline: none;
 }
 
-.button {
-  width: 45%;
+.buttonLogin {
+  display: block;
+  width: 50%;
+  box-sizing: border-box;
   padding: 10px;
   border-radius: 20px;
   border: none;
@@ -53,15 +59,14 @@
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
+  text-align: center;
 }
 
-.button:hover {
+.buttonLogin:hover {
   background-color: #7a23d1; 
 }
-
 
 .error-message {
   color: #CF6679;
   margin-bottom: 15px;
 }
-

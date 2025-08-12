@@ -31,8 +31,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
     <div className="login-container">
       <form onSubmit={handleLogin} className="login-form">
         <img src={FaceStoreLogo} alt="logo" className="logo" />
-        <h2 className="title">Face-Store</h2>
+        <h2 className="title">FaceStore</h2>
+
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+
         <input
           type="text"
           placeholder="CUIL"
@@ -49,7 +51,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
           className="input"
           required
         />
-        <button type="submit" className="button">
+
+        <button type="submit" className="buttonLogin">
           Iniciar sesión
         </button>
       </form>
